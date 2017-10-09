@@ -1,2 +1,2 @@
-# maplestory-ranking
-get maplestory ranking
+# JMS-Ranking
+get character ranking informations in jms server.
