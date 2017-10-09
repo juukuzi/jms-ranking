@@ -1,0 +1,19 @@
+{
+  "name": "jms-ranking",
+  "version": "1.0.0",
+  "description": "get character ranking informations in jms (japan maplestory server).",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/juukuzi/jms-ranking.git"
+  },
+  "author": "Juukuzi",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/juukuzi/jms-ranking/issues"
+  },
+  "homepage": "https://github.com/juukuzi/jms-ranking#readme"
+}
