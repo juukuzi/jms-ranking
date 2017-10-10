@@ -15,5 +15,10 @@
   "bugs": {
     "url": "https://github.com/juukuzi/jms-ranking/issues"
   },
-  "homepage": "https://github.com/juukuzi/jms-ranking#readme"
+  "homepage": "https://github.com/juukuzi/jms-ranking#readme",
+  "devDependencies": {
+    "ts-loader": "^2.3.7",
+    "typescript": "^2.5.3",
+    "webpack": "^3.6.0"
+  }
 }
