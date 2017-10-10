@@ -1,7 +1,4 @@
-import {Category, fetchHTML, parseHTML, World} from "../src";
+import {Category, requestRanking, World} from "../src";
 
-fetchHTML(World.YUKARI, Category.BOWMAN)
-    .then(html => {
-        const characters = parseHTML(html);
-        console.log(characters);
-    });
+requestRanking(World.YUKARI, Category.BOWMAN)
+    .then(characters => console.log(characters));

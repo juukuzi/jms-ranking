@@ -60,10 +60,10 @@ export enum Category {
 }
 
 
-export const RANKING_PAGE = 'http://hangame.maplestory.nexon.co.jp/ranking/ranking.asp';
+const RANKING_PAGE = 'http://hangame.maplestory.nexon.co.jp/ranking/ranking.asp';
 
 
-export function fetchHTML(world: World, category: Category): Promise<string> {
+function fetchHTML(world: World, category: Category): Promise<string> {
     return new Promise<string>((resolve, reject) => {
         const options: request.Options = {
             uri: RANKING_PAGE,
@@ -99,7 +99,13 @@ export interface CharacterData {
 }
 
 
-export function parseHTML(html: string): CharacterData[] {
+/**
+ * 取得してきたHTMLからキャラクター情報を抜き出すやつ
+ *
+ * @param html文字列
+ * @returns キャラクター情報の配列
+ */
+function parseHTML(html: string): CharacterData[] {
     const $ = cheerio.load(html);
     const nameTDs = $('.color00659c');
     const characters: CharacterData[] = [];
@@ -130,4 +136,17 @@ export function parseHTML(html: string): CharacterData[] {
     });
 
     return characters;
+}
+
+
+/**
+ * 指定された検索条件でのランキングを取得します。
+ *
+ * @param world サーバー条件
+ * @param category 職業などの条件
+ * @returns キャラクター情報の配列をとってくるPromiseオブジェクト
+ */
+export function requestRanking(world: World, category: Category): Promise<CharacterData[]> {
+    return fetchHTML(world, category)
+        .then(html => parseHTML(html));
 }
