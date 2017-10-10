@@ -60,10 +60,19 @@ export enum Category {
 }
 
 
-const RANKING_PAGE = 'http://hangame.maplestory.nexon.co.jp/ranking/ranking.asp';
-
-
+/**
+ * Hangameのランキングページにアクセスして、html文字列をもらってきます。
+ *
+ * @param world サーバーのやつ
+ * @param category 職業とかのやつ
+ * @returns HTML文字列とってくるPromise
+ */
 function fetchHTML(world: World, category: Category): Promise<string> {
+
+    // あんまりこのURLをソースに埋め込むのはよくない気もするけれど
+    // どうせURLが変わるようなことがあったら他の仕様もかわって使えなくなるしOK
+    const RANKING_PAGE = 'http://hangame.maplestory.nexon.co.jp/ranking/ranking.asp';
+
     return new Promise<string>((resolve, reject) => {
         const options: request.Options = {
             uri: RANKING_PAGE,
@@ -90,7 +99,7 @@ function fetchHTML(world: World, category: Category): Promise<string> {
  * その日のキャラクターの情報
  */
 export interface CharacterData {
-    // image: string
+    // image: string    // アバター画像は多分使わないから取得しない
     name: string;
     server: string;
     job: string;
@@ -102,12 +111,19 @@ export interface CharacterData {
 /**
  * 取得してきたHTMLからキャラクター情報を抜き出すやつ
  *
- * @param html文字列
+ * @param html 取得してきたhtml形式の文字列
  * @returns キャラクター情報の配列
  */
 function parseHTML(html: string): CharacterData[] {
+
+    // cheerio: Node.jsでjQueryぽくお手軽DOM解析できるやつ
     const $ = cheerio.load(html);
+
+    // あんまりセマンティックじゃないけど、
+    // 拾いやすい位置にクラスついてるのがいたのでそこから捕まえる（他にろくなのがない）
     const nameTDs = $('.color00659c');
+
+    // 各要素からデータを抽出して配列にいれていくよ
     const characters: CharacterData[] = [];
     nameTDs.each((index, nameTDElement) => {
 
@@ -121,10 +137,12 @@ function parseHTML(html: string): CharacterData[] {
         const job = $job.text();
 
         const $levelAndExp = $job.next();
-        const levelAndExp = $levelAndExp.text().split(' (');
+        const levelAndExp = $levelAndExp.text()
+            .replace(')', '')
+            .split(' (');
 
         const level = parseInt(levelAndExp[0]);
-        const exp = parseInt(levelAndExp[1].replace(')', ''));
+        const exp = parseInt(levelAndExp[1]);
 
         characters.push({
             name,
