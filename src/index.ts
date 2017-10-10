@@ -1,3 +1,7 @@
+import * as request from 'request';
+import * as cheerio from 'cheerio';
+
+
 /**
  * POSTパラメーター "ddlWorld" が取りうる値です。
  */
@@ -8,6 +12,7 @@ export enum World {
     YUKARI = 2,
     REBOOT = 45,
 }
+
 
 /**
  * POSTパラメーター "ddlJob" が取りうる値です。
@@ -51,16 +56,78 @@ export enum Category {
     ZERO = 'ゼロ',
     BEAST_TAMER = 'ビーストテイマー',
     KINESIS = 'キネシス',
-    // Illium = 'イリウム'
+    // ILLIUM = 'イリウム'
 }
 
+
+export const RANKING_PAGE = 'http://hangame.maplestory.nexon.co.jp/ranking/ranking.asp';
+
+
+export function fetchHTML(world: World, category: Category): Promise<string> {
+    return new Promise<string>((resolve, reject) => {
+        const options: request.Options = {
+            uri: RANKING_PAGE,
+            headers: {
+                'Content-Type': 'application/x-www-form-urlencoded'
+            },
+            form: {
+                'ddlWorld': world,
+                'ddlJob': category
+            }
+        };
+        request.post(options, (error, response, body) => {
+            if (error) {
+                reject(error);
+            } else {
+                resolve(body);
+            }
+        });
+    });
+}
+
+
 /**
- * 引数で指定された情報を、ハンゲーム側のランキングページが受け付ける形式に整形します。
- * 
- * @param world ddlWorldに格納する値
- * @param category ddlJobに格納する値
+ * その日のキャラクターの情報
  */
-export function encodeParams(world: World, category: Category): string {
-    return 'ddlWorld=' + encodeURIComponent(String(world)) +
-     '&ddlJob=' + encodeURIComponent(category);
+export interface CharacterData {
+    // image: string
+    name: string;
+    server: string;
+    job: string;
+    level: number;
+    exp: number;
+}
+
+
+export function parseHTML(html: string): CharacterData[] {
+    const $ = cheerio.load(html);
+    const nameTDs = $('.color00659c');
+    const characters: CharacterData[] = [];
+    nameTDs.each((index, nameTDElement) => {
+
+        const $name = $(nameTDElement);
+        const name = $name.last().text();
+
+        const $server = $name.next();
+        const server = $server.text();
+
+        const $job = $server.next();
+        const job = $job.text();
+
+        const $levelAndExp = $job.next();
+        const levelAndExp = $levelAndExp.text().split(' (');
+
+        const level = parseInt(levelAndExp[0]);
+        const exp = parseInt(levelAndExp[1].replace(')', ''));
+
+        characters.push({
+            name,
+            server,
+            job,
+            level,
+            exp
+        });
+    });
+
+    return characters;
 }

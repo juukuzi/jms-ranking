@@ -4,7 +4,7 @@
   "description": "get character ranking informations in jms (japan maplestory server).",
   "main": "index.js",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "test": "karma start"
   },
   "repository": {
     "type": "git",
@@ -17,18 +17,15 @@
   },
   "homepage": "https://github.com/juukuzi/jms-ranking#readme",
   "devDependencies": {
+    "@types/cheerio": "^0.22.3",
     "@types/jasmine": "^2.6.0",
-    "istanbul-instrumenter-loader": "^3.0.0",
+    "@types/node": "^8.0.33",
+    "@types/request": "^2.0.4",
     "jasmine-core": "^2.8.0",
-    "karma": "^1.7.1",
-    "karma-coverage": "^1.1.1",
-    "karma-jasmine": "^1.1.0",
-    "karma-phantomjs-launcher": "^1.0.4",
-    "karma-sourcemap-loader": "^0.3.7",
-    "karma-typescript-preprocessor": "^0.3.1",
-    "karma-webpack": "^2.0.5",
-    "ts-loader": "^2.3.7",
-    "typescript": "^2.5.3",
-    "webpack": "^3.6.0"
+    "typescript": "^2.5.3"
+  },
+  "dependencies": {
+    "cheerio": "^1.0.0-rc.2",
+    "request": "^2.83.0"
   }
 }
