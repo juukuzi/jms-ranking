@@ -17,6 +17,16 @@
   },
   "homepage": "https://github.com/juukuzi/jms-ranking#readme",
   "devDependencies": {
+    "@types/jasmine": "^2.6.0",
+    "istanbul-instrumenter-loader": "^3.0.0",
+    "jasmine-core": "^2.8.0",
+    "karma": "^1.7.1",
+    "karma-coverage": "^1.1.1",
+    "karma-jasmine": "^1.1.0",
+    "karma-phantomjs-launcher": "^1.0.4",
+    "karma-sourcemap-loader": "^0.3.7",
+    "karma-typescript-preprocessor": "^0.3.1",
+    "karma-webpack": "^2.0.5",
     "ts-loader": "^2.3.7",
     "typescript": "^2.5.3",
     "webpack": "^3.6.0"
