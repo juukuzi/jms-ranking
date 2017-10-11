@@ -1,5 +1,6 @@
 import * as request from 'request';
 import * as cheerio from 'cheerio';
+import { CharacterData } from './CharacterData';
 
 
 /**
@@ -96,25 +97,13 @@ function fetchHTML(world: World, category: Category): Promise<string> {
 
 
 /**
- * その日のキャラクターの情報
- */
-export interface CharacterData {
-    // image: string    // アバター画像は多分使わないから取得しない
-    name: string;
-    server: string;
-    job: string;
-    level: number;
-    exp: number;
-}
-
-
-/**
  * 取得してきたHTMLからキャラクター情報を抜き出すやつ
  *
  * @param html 取得してきたhtml形式の文字列
+ * @param date 取得日時
  * @returns キャラクター情報の配列
  */
-function parseHTML(html: string): CharacterData[] {
+function parseHTML(html: string, date: Date): CharacterData[] {
 
     // cheerio: Node.jsでjQueryぽくお手軽DOM解析できるやつ
     const $ = cheerio.load(html);
@@ -146,6 +135,7 @@ function parseHTML(html: string): CharacterData[] {
 
         characters.push({
             name,
+            date,
             server,
             job,
             level,
@@ -166,5 +156,5 @@ function parseHTML(html: string): CharacterData[] {
  */
 export function requestRanking(world: World, category: Category): Promise<CharacterData[]> {
     return fetchHTML(world, category)
-        .then(html => parseHTML(html));
+        .then(html => parseHTML(html, new Date()));
 }
