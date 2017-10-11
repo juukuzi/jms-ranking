@@ -5,7 +5,7 @@
   "main": "index.js",
   "scripts": {
     "build": "tsc",
-    "test": ""
+    "test": "mocha --require ts-node/register --timeout 10000 ./test/*.ts"
   },
   "repository": {
     "type": "git",
@@ -18,12 +18,14 @@
   },
   "homepage": "https://github.com/juukuzi/jms-ranking#readme",
   "devDependencies": {
+    "@types/chai": "^4.0.4",
     "@types/cheerio": "^0.22.3",
-    "@types/jasmine": "^2.6.0",
+    "@types/mocha": "^2.2.43",
     "@types/node": "^8.0.33",
     "@types/request": "^2.0.4",
     "chai": "^4.1.2",
     "mocha": "^4.0.1",
+    "ts-node": "^3.3.0",
     "typescript": "^2.5.3"
   },
   "dependencies": {
