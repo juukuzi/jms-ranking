@@ -7,7 +7,7 @@ import * as Twit from 'twit';
  *
  * @param message ツイートする文字列
  */
-export function tweet(message: string) {
+export function tweet(message: string): void {
 
     const twitConfig = require('../../twit.config.json');
     const twit = new Twit(twitConfig);
