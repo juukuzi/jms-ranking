@@ -5,7 +5,6 @@ import World from "./World";
 import Category from "./Category";
 import RankingList from "./RankingList";
 
-
 /**
  * Hangameのランキングページにアクセスして、html文字列をもらってきます。
  *
@@ -97,29 +96,20 @@ function parseHTML(html: string): PlayerCharacterData[] {
  * @param category 職業などの条件
  * @returns キャラクター情報の配列をとってくるPromiseオブジェクト
  */
-export function requestRanking(world: World, category: Category): Promise<RankingList> {
+function requestRanking(world: World, category: Category): Promise<RankingList> {
 
     const date = new Date().toDateString();
 
     return fetchHTML(world, category)
-        .then(html => Promise.resolve({
-            dateString: date,
-            worldKey: World.key(world),
-            categoryKey: Category.key(category),
-            characters: parseHTML(html)
-        }));
+        .then(html =>
+            Promise.resolve({
+                dateString: date,
+                worldKey: World.key(world),
+                categoryKey: Category.key(category),
+                characters: parseHTML(html)
+            })
+        );
 }
 
 
-/**
- * @returns 全部のランキングひろってくるやつ
- */
-export function requestAllRankings(): Promise<RankingList>[] {
-    const rankingPromises = [];
-    for (const world of World.asList()) {
-        for (const category of Category.asList()) {
-            rankingPromises.push(requestRanking(world.value, category.value));
-        }
-    }
-    return rankingPromises;
-}
+export default requestRanking;

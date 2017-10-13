@@ -34,7 +34,7 @@ function toEntity(dateString: string, worldKey: string, categoryKey: string, cha
 /**
  * @param ranking
  */
-export function saveToDatastore(ranking: RankingList): void {
+export async function saveToDatastore(ranking: RankingList): Promise<void> {
 
     const {
         characters,
@@ -43,8 +43,10 @@ export function saveToDatastore(ranking: RankingList): void {
         categoryKey
     } = ranking;
 
-    characters
+    const complete = characters
         .map(character => toEntity(dateString, worldKey, categoryKey, character))
-        .forEach(entity => datastore.save(entity));
+        .map(entity => datastore.save(entity));
+
+    await Promise.all(complete);
 
 }

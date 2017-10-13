@@ -12,25 +12,13 @@ enum World {
 
 namespace World {
 
-    interface WorldObject {
-        /** ALPHABET */
-        name: string;
-        /** (number) */
-        value: World;
-    }
+    export const map = new Map<string, World>();
 
-    export function asList(): WorldObject[] {
-        const map: WorldObject[] = [];
-        for (const key in World) {
-            const value = World[key];
-            if (typeof value === 'number') {
-                map.push({
-                    name: key,
-                    value: value
-                });
-            }
+    for (const key in World) {
+        const value = World[key];
+        if (typeof value === 'number') {
+            map.set(key, value);
         }
-        return map;
     }
 
     export function key(value: World): string {

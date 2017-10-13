@@ -46,30 +46,19 @@ enum Category {
 
 namespace Category {
 
-    interface CategoryObject {
-        /** key (ALPHABET) */
-        name: string;
-        /** Japanese */
-        value: Category;
-    }
+    export const map = new Map<string, Category>();
+    const reverseMap = new Map<Category, string>();
 
-    const list: CategoryObject[] = [];
     for (const key in Category) {
         const value = Category[key];
         if (typeof value === 'string' && /[A-Z_]+/.test(key)) {
-            list.push({
-                name: key,
-                value: value as Category
-            });
+            map.set(key, value as Category);
+            reverseMap.set(value as Category, key);
         }
     }
 
-    export function asList(): CategoryObject[] {
-        return list;
-    }
-
     export function key(value: Category): string {
-        return list.find(ca => ca.value === value)!.name;
+        return reverseMap.get(value)!;
     }
 
 }
