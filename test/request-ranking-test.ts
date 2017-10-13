@@ -1,8 +1,8 @@
 import { expect } from 'chai';
 import 'mocha';
 import { requestRanking} from "../src/requestRanking";
-import {World} from "../src/World";
-import {Category} from "../src/Category";
+import World from "../src/World";
+import Category from "../src/Category";
 
 
 describe('request ranking', () => {

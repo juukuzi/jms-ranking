@@ -1,7 +1,7 @@
 /**
  * ランキングサイトのPOSTパラメーター "ddlJob" が取りうる値です。
  */
-export const enum Category {
+enum Category {
     ALL = '男女＋職業全体',
     MALE = '男',
     FEMALE = '女',
@@ -42,3 +42,32 @@ export const enum Category {
     KINESIS = 'キネシス',
     // ILLIUM = 'イリウム'
 }
+
+
+namespace Category {
+
+    interface CategoryObject {
+        /** key (ALPHABET) */
+        name: string;
+        /** Japanese */
+        value: Category;
+    }
+
+    export function asList(): CategoryObject[] {
+        const map: CategoryObject[] = [];
+        for (const key in Category) {
+            const value = Category[key];
+            if (typeof value === 'string' && /[A-Z_]+/.test(key)) {
+                map.push({
+                    name: key,
+                    value: value as Category
+                });
+            }
+        }
+        return map;
+    }
+
+}
+
+
+export default Category;

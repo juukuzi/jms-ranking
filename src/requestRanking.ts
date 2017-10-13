@@ -1,8 +1,8 @@
 import * as request from 'request';
 import * as cheerio from 'cheerio';
-import { CharacterData } from './CharacterData';
-import { World } from "./World";
-import { Category } from "./Category";
+import CharacterData from './CharacterData';
+import World from "./World";
+import Category from "./Category";
 
 
 /**
