@@ -1,10 +1,11 @@
 import Datastore = require('@google-cloud/datastore');
 import Category from "./Category";
 import World from "./World";
-import CharacterData from "./CharacterData";
+import PlayerCharacterData from "./PlayerCharacterData";
+import RankingList from "./RankingList";
 
 
-const datastore = Datastore();
+const datastore = new Datastore();
 
 
 /**
@@ -14,7 +15,7 @@ const datastore = Datastore();
  * @param character
  * @returns Datastoreに保存する用のエンティティ
  */
-function toEntity(dateString: string, worldKey: string, categoryKey: string, character: CharacterData) {
+function toEntity(dateString: string, worldKey: string, categoryKey: string, character: PlayerCharacterData) {
     return {
         key: datastore.key([
             'Date', dateString,
@@ -31,17 +32,19 @@ function toEntity(dateString: string, worldKey: string, categoryKey: string, cha
 
 
 /**
- * @param date 取得日を表す文字列。Date.prototype.toDateString()の値
- * @param characters 保存するキャラクターのリスト
- * @param worldKey ワールドを表す文字列。enumのキー名のほう
- * @param categoryKey 職業等の分類を表す文字列。enumのキー名のほう
+ * @param ranking
  */
-export function saveToDatastore(
-    date: string, characters: CharacterData[],
-    worldKey: string, categoryKey: string): void {
+export function saveToDatastore(ranking: RankingList): void {
+
+    const {
+        characters,
+        dateString,
+        worldKey,
+        categoryKey
+    } = ranking;
 
     characters
-        .map(character => toEntity(date, worldKey, categoryKey, character))
+        .map(character => toEntity(dateString, worldKey, categoryKey, character))
         .forEach(entity => datastore.save(entity));
 
 }

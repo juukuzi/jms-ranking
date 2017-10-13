@@ -2,9 +2,9 @@
  * ランキングサイトのPOSTパラメーター "ddlJob" が取りうる値です。
  */
 enum Category {
-    // ALL = '男女＋職業全体',
-    // MALE = '男',
-    // FEMALE = '女',
+    ALL = '男女＋職業全体',
+    MALE = '男',
+    FEMALE = '女',
     WARRIOR = '戦士',
     MAGICIAN = '魔法使い',
     BOWMAN = '弓使い',
@@ -53,18 +53,23 @@ namespace Category {
         value: Category;
     }
 
-    export function asList(): CategoryObject[] {
-        const map: CategoryObject[] = [];
-        for (const key in Category) {
-            const value = Category[key];
-            if (typeof value === 'string' && /[A-Z_]+/.test(key)) {
-                map.push({
-                    name: key,
-                    value: value as Category
-                });
-            }
+    const list: CategoryObject[] = [];
+    for (const key in Category) {
+        const value = Category[key];
+        if (typeof value === 'string' && /[A-Z_]+/.test(key)) {
+            list.push({
+                name: key,
+                value: value as Category
+            });
         }
-        return map;
+    }
+
+    export function asList(): CategoryObject[] {
+        return list;
+    }
+
+    export function key(value: Category): string {
+        return list.find(ca => ca.value === value)!.name;
     }
 
 }

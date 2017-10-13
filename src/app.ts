@@ -2,26 +2,30 @@ import * as express from 'express';
 import { Request, Response } from 'express';
 import { CronJob } from "cron";
 import { tweet } from "./tweet";
-import { getAll, saveToDatastore } from "./datastore";
 import {requestRanking} from "./requestRanking";
+import World from "./World";
+import Category from "./Category";
 
+//
+// const app = express();
+// app.get('/', (req: Request, res: Response) =>
+//     res.send('IN DEVELOPMENT'));
+//
+// app.listen(8080, () =>
+//     console.log('server listening on port 8080.'));
+//
+//
+// const tweetTimer = new CronJob(
+//     '00 00 08 * * *',
+//     () => {
+//         tweet('8時です！ （プログラムから定時ツイートさせるテストです）')
+//     },
+//     () => console.log('tweet timer stopped.'),
+//     false,
+//     'Asia/Tokyo'
+// );
+//
+// tweetTimer.start();
 
-const app = express();
-app.get('/', (req: Request, res: Response) =>
-    res.send('IN DEVELOPMENT'));
-
-app.listen(8080, () =>
-    console.log('server listening on port 8080.'));
-
-
-const tweetTimer = new CronJob(
-    '00 00 08 * * *',
-    () => {
-        tweet('8時です！ （プログラムから定時ツイートさせるテストです）')
-    },
-    () => console.log('tweet timer stopped.'),
-    false,
-    'Asia/Tokyo'
-);
-
-tweetTimer.start();
+requestRanking(World.YUKARI, Category.BOWMAN)
+    .then(ranking => console.log(ranking));

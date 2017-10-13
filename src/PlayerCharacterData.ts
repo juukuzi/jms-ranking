@@ -1,7 +1,7 @@
 /**
  * ある特定の日に取得した時点でのキャラクターの情報
  */
-interface CharacterData {
+interface PlayerCharacterData {
     // image: string    // アバター画像は多分使わないから取得しない
 
     /**
@@ -32,4 +32,4 @@ interface CharacterData {
 }
 
 
-export default CharacterData;
+export default PlayerCharacterData;

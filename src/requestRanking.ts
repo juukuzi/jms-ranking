@@ -1,8 +1,9 @@
 import * as request from 'request';
 import * as cheerio from 'cheerio';
-import CharacterData from './CharacterData';
+import PlayerCharacterData from './PlayerCharacterData';
 import World from "./World";
 import Category from "./Category";
+import RankingList from "./RankingList";
 
 
 /**
@@ -44,10 +45,9 @@ function fetchHTML(world: World, category: Category): Promise<string> {
  * 取得してきたHTMLからキャラクター情報を抜き出すやつ
  *
  * @param html 取得してきたhtml形式の文字列
- * @param date 取得日時
  * @returns キャラクター情報の配列
  */
-function parseHTML(html: string, date: Date): CharacterData[] {
+function parseHTML(html: string): PlayerCharacterData[] {
 
     // cheerio: Node.jsでjQueryぽくお手軽DOM解析できるやつ
     const $ = cheerio.load(html);
@@ -57,7 +57,7 @@ function parseHTML(html: string, date: Date): CharacterData[] {
     const nameTDs = $('.color00659c');
 
     // 各要素からデータを抽出して配列にいれていくよ
-    const characters: CharacterData[] = [];
+    const characters: PlayerCharacterData[] = [];
     nameTDs.each((index, nameTDElement) => {
 
         const $name = $(nameTDElement);
@@ -79,7 +79,6 @@ function parseHTML(html: string, date: Date): CharacterData[] {
 
         characters.push({
             name,
-            date,
             server,
             job,
             level,
@@ -98,7 +97,29 @@ function parseHTML(html: string, date: Date): CharacterData[] {
  * @param category 職業などの条件
  * @returns キャラクター情報の配列をとってくるPromiseオブジェクト
  */
-export function requestRanking(world: World, category: Category): Promise<CharacterData[]> {
+export function requestRanking(world: World, category: Category): Promise<RankingList> {
+
+    const date = new Date().toDateString();
+
     return fetchHTML(world, category)
-        .then(html => parseHTML(html, new Date()));
+        .then(html => Promise.resolve({
+            dateString: date,
+            worldKey: World.key(world),
+            categoryKey: Category.key(category),
+            characters: parseHTML(html)
+        }));
+}
+
+
+/**
+ * @returns 全部のランキングひろってくるやつ
+ */
+export function requestAllRankings(): Promise<RankingList>[] {
+    const rankingPromises = [];
+    for (const world of World.asList()) {
+        for (const category of Category.asList()) {
+            rankingPromises.push(requestRanking(world.value, category.value));
+        }
+    }
+    return rankingPromises;
 }

@@ -2,7 +2,7 @@
  * ランキングサイトのPOSTパラメーター "ddlWorld" が取りうる値です。
  */
 enum World {
-    // ALL = 9999,
+    ALL = 9999,
     KAEDE = 0,
     KURUMI = 1,
     YUKARI = 2,
@@ -31,6 +31,10 @@ namespace World {
             }
         }
         return map;
+    }
+
+    export function key(value: World): string {
+        return World[value];
     }
 
 }
