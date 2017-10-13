@@ -5,7 +5,7 @@ import PlayerCharacterData from "./PlayerCharacterData";
 import RankingList from "./RankingList";
 
 
-const datastore = new Datastore();
+const datastore = Datastore();
 
 
 /**
