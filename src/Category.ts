@@ -2,9 +2,9 @@
  * ランキングサイトのPOSTパラメーター "ddlJob" が取りうる値です。
  */
 enum Category {
-    ALL = '男女＋職業全体',
-    MALE = '男',
-    FEMALE = '女',
+    // ALL = '男女＋職業全体',
+    // MALE = '男',
+    // FEMALE = '女',
     WARRIOR = '戦士',
     MAGICIAN = '魔法使い',
     BOWMAN = '弓使い',

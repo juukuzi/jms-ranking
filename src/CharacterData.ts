@@ -10,11 +10,6 @@ interface CharacterData {
     name: string;
 
     /**
-     * いつ取得したデータか
-     */
-    date: Date;
-
-    /**
      * サーバー名
      */
     server: string;
