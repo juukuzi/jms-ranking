@@ -7,13 +7,12 @@ import crawl from "./crawl";
 const app = express();
 
 
+// publicフォルダの中身をwebに公開
 app.use(express.static('public'));
 
 
-app.get('/', (req: Request, res: Response) =>
-    res.send('IN DEVELOPMENT'));
-
-
+// クローリングを開始するリクエストに対応。
+// cron.yamlで設定してあるタイミングでこれが呼び出されるはず。
 app.get('/crawl', async (req: Request, res: Response) => {
 
     // GCPのcronからリクエストがきたときは、このヘッダーがついてるらしいです
@@ -36,5 +35,9 @@ app.get('/crawl', async (req: Request, res: Response) => {
 
 });
 
-app.listen(8080, () =>
-    console.log('server listening on port 8080.'));
+
+// ポートはデフォルトで8080つかうらしい
+const PORT = process.env.PORT || 8080;
+app.listen(PORT, () => {
+    logger.info(`App listening on port ${PORT}`);
+});
