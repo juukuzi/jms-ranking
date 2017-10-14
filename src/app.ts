@@ -1,36 +1,40 @@
 import * as express from 'express';
 import { Request, Response } from 'express';
-import { CronJob } from "cron";
-import { tweet } from "./tweet";
-import requestRanking from "./requestRanking";
-import World from "./World";
-import Category from "./Category";
-import {saveToDatastore} from "./datastore";
 import logger from "./logger";
 import crawl from "./crawl";
 
 
 const app = express();
+
+
+app.use(express.static('public'));
+
+
 app.get('/', (req: Request, res: Response) =>
     res.send('IN DEVELOPMENT'));
 
+
+app.get('/crawl', async (req: Request, res: Response) => {
+
+    // GCPのcronからリクエストがきたときは、このヘッダーがついてるらしいです
+    const fromCron = req.get('X-Appengine-Cron') === 'true';
+
+    if (fromCron) {
+        try {
+            await crawl();
+            res.sendStatus(200);
+
+        } catch (err) {
+            logger.error(err);
+            res.sendStatus(500);
+        }
+
+    } else {
+        // なんかサービス外からクローリングリクエストが来たとき
+        res.sendStatus(403);
+    }
+
+});
+
 app.listen(8080, () =>
     console.log('server listening on port 8080.'));
-
-
-// const tweetTimer = new CronJob(
-//     '00 00 08 * * *',
-//     () => {
-//         tweet('8時です！ （プログラムから定時ツイートさせるテストです）')
-//     },
-//     () => console.log('tweet timer stopped.'),
-//     false,
-//     'Asia/Tokyo'
-// );
-//
-// tweetTimer.start();
-
-
-crawl()
-    .then(() => logger.info('crawl complete.'))
-    .catch(err => logger.error(err));
