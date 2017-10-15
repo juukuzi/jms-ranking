@@ -1,7 +1,7 @@
 import Category from "./Category";
 import World from "./World";
 import requestRanking from "./requestRanking";
-import { saveToDatastore } from "./datastore";
+import { saveRankingList } from "./datastore";
 import logger from "./logger";
 
 
@@ -18,7 +18,7 @@ async function crawl(): Promise<void> {
             logger.debug(`request ${world}:${category}`);
 
             const ranking = await requestRanking(world, category);
-            await saveToDatastore(ranking);
+            await saveRankingList(ranking);
 
             logger.debug(`complete ${world}:${category}`);
 

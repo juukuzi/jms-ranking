@@ -1,4 +1,5 @@
 import * as Twit from 'twit';
+import logger from "./logger";
 
 
 /**
@@ -16,8 +17,8 @@ export function tweet(message: string): void {
         'statuses/update',
         { status: message },
         (err, data) => {
-            if (err) console.log(err);
-            else console.log(data);
+            if (err) logger.error(err.toString());
+            else logger.debug(JSON.stringify(data));
         }
     );
 
