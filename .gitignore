@@ -1,4 +1,4 @@
 /.idea
 /node_modules
 /lib
-twit.config.json
+resources/twit.config.json
