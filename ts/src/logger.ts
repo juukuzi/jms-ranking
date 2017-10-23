@@ -5,7 +5,7 @@ const logger = new winston.Logger({
     level: 'debug',
     transports: [
         // new winston.transports.Console(),
-        gcloudTransport
+        gcloudTransport()
     ]
 });
 
