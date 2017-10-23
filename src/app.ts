@@ -6,16 +6,16 @@ import { ConfigKeys as TwitConfig } from "twit";
 import { Request, Response } from 'express';
 import logger from "./logger";
 import crawl from "./crawl";
+import { insertUserIfNotExists } from "./datastore";
 
 
 const app = express();
 
 
 // publicフォルダの中身をwebに公開
-app.use(express.static('public'));
+app.use(express.static('resources/public'));
 
-
-// Twitter認証関連
+// passport用各種設定
 app.use(session({
     secret: 'hogemoge',
     resave: false,
@@ -23,6 +23,7 @@ app.use(session({
 }));
 app.use(passport.initialize());
 app.use(passport.session());
+
 
 const twitConfig = require('../../resources/twit.config.json') as TwitConfig;
 
@@ -36,17 +37,22 @@ passport.use(new TwitterStrategy(
         callbackURL: '/auth/twitter/callback'
     },
     (token, tokenSecret, profile, done) => {
-        return done(null, profile);
+        insertUserIfNotExists(profile.id, profile.username, token, tokenSecret)
+            .then(() => done(null, profile))
+            .catch(err => logger.error(err));
     }
 ));
 
 app.get('/auth/twitter', passport.authenticate('twitter'));
 
-app.get('/auth/twitter/callback',
-    passport.authenticate('twitter', { failureRedirect: '/fail-auth.html' }),
+app.get('/my-page',
+    passport.authenticate(
+        'twitter',
+        {
+            failureRedirect: '/fail-auth',
+        }),
     (req: Request, res: Response) => {
-        logger.debug('auth success : ' + JSON.stringify(req));
-        res.send('success!');
+
     }
 );
 
@@ -60,7 +66,8 @@ app.get('/crawl', async (req: Request, res: Response) => {
 
     if (fromCron) {
         try {
-            await crawl();
+            // await crawl();
+            logger.info('get crawl request');
             res.sendStatus(200);
 
         } catch (err) {
