@@ -1,11 +1,21 @@
 extends layout
 
 block content
+
+  // トップページ
+
   header
-    h1= title
+    h1 JMS Ranking Tweet
 
   p メイプルストーリーの毎日の経験値・ランキング変動をツイートするサービスです。
 
-  h2 使い方
+  div(class='')
+    if user
+      p ログイン中
+        span= JSON.stringify(user)
+    else
+      p ログインしていません。（このへんにログインページへのリンク）
 
-  p まだしっかりと仕様がかたまっていないよ。
+  // ユーザー向け読んでね事項
+  div(class='readme')
+    include:markdown-it ./includes/readme.md
