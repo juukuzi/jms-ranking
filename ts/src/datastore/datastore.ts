@@ -1,7 +1,7 @@
 import Datastore = require('@google-cloud/datastore');
 
 
-const datastore = new Datastore({});
+export const datastore = new Datastore({});
 
 
 /**

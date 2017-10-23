@@ -10,7 +10,9 @@ myPageRouter.get('/',
             failureRedirect: '/fail-auth',
         }),
     (req: Request, res: Response) => {
-
+        res.render('myPage', {
+            title: 'MyPage'
+        });
     }
 );
 
