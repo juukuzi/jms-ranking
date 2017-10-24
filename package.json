@@ -30,6 +30,7 @@
     "@types/passport": "^0.3.4",
     "@types/passport-twitter": "^1.0.32",
     "@types/request": "^2.0.4",
+    "@types/source-map-support": "^0.4.0",
     "@types/twit": "^2.2.7",
     "@types/winston": "^2.3.6",
     "chai": "^4.1.2",
@@ -49,6 +50,7 @@
     "passport-twitter": "^1.0.4",
     "pug": "^2.0.0-rc.4",
     "request": "^2.83.0",
+    "source-map-support": "^0.5.0",
     "twit": "^2.2.9",
     "winston": "^2.4.0"
   }

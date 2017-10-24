@@ -1,6 +1,11 @@
-import setupApplication from "./src/setup";
-import logger from "./src/logger";
+import * as sourceMapSupport from 'source-map-support';
+import setupApplication from './src/setup';
+import logger from './src/logger';
 
+// スタックトレースとか読みやすくする。
+sourceMapSupport.install();
+
+// expressアプリケーションの設定
 const app = setupApplication();
 
 // ポートはデフォルトで8080番を使うらしい。
