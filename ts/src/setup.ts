@@ -6,7 +6,7 @@ import connectDatastore = require('@google-cloud/connect-datastore');
 import * as passport from 'passport';
 import { Strategy as TwitterStrategy} from 'passport-twitter';
 import index from './routes/index';
-import myPage from './routes/myPage';
+import edit from './routes/edit';
 import crawl from './routes/crawl';
 import auth from './routes/auth';
 import config from "./config";
@@ -55,7 +55,7 @@ export default function setup(): Application {
         {
             consumerKey: config.twitter.consumerKey,
             consumerSecret: config.twitter.consumerSecret,
-            callbackURL: 'https://jms-ranking-tweet.appspot.com/myPage'
+            callbackURL: 'https://jms-ranking-tweet.appspot.com/'
         },
         (token, tokenSecret, profile, done) => {
             User.signUp(profile.id, profile.username, token, tokenSecret)
@@ -69,7 +69,7 @@ export default function setup(): Application {
 
     // 各パスに対するリクエストのルーティング設定
     app.use('/', index);
-    app.use('/myPage', myPage);
+    app.use('/edit', edit);
     app.use('/crawl', crawl);
     app.use('/auth', auth);
 
