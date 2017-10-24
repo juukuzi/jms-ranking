@@ -6,7 +6,10 @@ import datastore from "./datastore";
  */
 interface User {
 
-    /** ツイッターのアカウント名。多分マイページとかで使う。 */
+    /** TwitterのID（数字） */
+    id: string;
+
+    /** Twitterのアカウント名。多分マイページとかで使う。 */
     userName: string;
 
     /** Mapleのキャラクター名。 */
@@ -78,6 +81,7 @@ namespace User {
         } else {
             // なかったときは新しく作って保存
             user = {
+                id,
                 userName,
                 token,
                 tokenSecret

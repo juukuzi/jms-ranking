@@ -4,7 +4,7 @@ import { Application, NextFunction, Request, Response} from "express";
 import * as session from 'express-session';
 import connectDatastore = require('@google-cloud/connect-datastore');
 import * as passport from 'passport';
-import { Profile, Strategy as TwitterStrategy} from 'passport-twitter';
+import { Strategy as TwitterStrategy} from 'passport-twitter';
 import index from './routes/index';
 import myPage from './routes/myPage';
 import crawl from './routes/crawl';
@@ -42,7 +42,7 @@ export default function setup(): Application {
     app.use(passport.initialize());
     app.use(passport.session());
 
-    passport.serializeUser((user: Profile, done) => {
+    passport.serializeUser((user: User, done) => {
         done(null, user.id)
     });
     passport.deserializeUser((id: string, done) => {
