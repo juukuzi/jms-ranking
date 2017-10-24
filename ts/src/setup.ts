@@ -4,17 +4,15 @@ import { Application, NextFunction, Request, Response} from "express";
 import * as session from 'express-session';
 import connectDatastore = require('@google-cloud/connect-datastore');
 import * as passport from 'passport';
-import { Strategy as TwitterStrategy } from 'passport-twitter';
-import { ConfigKeys as TwitConfig } from 'twit';
+import { Profile, Strategy as TwitterStrategy} from 'passport-twitter';
 import index from './routes/index';
 import myPage from './routes/myPage';
 import crawl from './routes/crawl';
 import auth from './routes/auth';
-import onAuth from './onAuth';
-import {datastore} from "./datastore/datastore";
-
-// 設定ファイル（JSON）をよみこむ。.gitignoreされてるよ。
-const twitConfig = require('../../resources/twit.config.json') as TwitConfig;
+import config from "./config";
+import datastore from "./datastore/datastore";
+import User from "./datastore/User";
+import logger from "./logger";
 
 
 export default function setup(): Application {
@@ -36,7 +34,7 @@ export default function setup(): Application {
         store: new DatastoreStore({
             dataset: datastore
         }),
-        secret: 'hogemoge',
+        secret: config.sessionKey,
         resave: false,
         saveUninitialized: false
     }));
@@ -44,16 +42,29 @@ export default function setup(): Application {
     app.use(passport.initialize());
     app.use(passport.session());
 
-    passport.serializeUser((user, done) => done(null, user));
-    passport.deserializeUser((obj, done) => done(null, obj));
+    passport.serializeUser((user: Profile, done) => {
+        done(null, user.id)
+    });
+    passport.deserializeUser((id: string, done) => {
+        User.findById(id)
+            .then(user => done(null, user))
+            .catch(err => done(err));
+    });
 
     passport.use(new TwitterStrategy(
         {
-            consumerKey: twitConfig.consumer_key,
-            consumerSecret: twitConfig.consumer_secret,
+            consumerKey: config.twitter.consumerKey,
+            consumerSecret: config.twitter.consumerSecret,
             callbackURL: 'https://jms-ranking-tweet.appspot.com/myPage'
         },
-        onAuth
+        (token, tokenSecret, profile, done) => {
+            User.signUp(profile.id, profile.username, token, tokenSecret)
+                .then(user => done(null, user))
+                .catch(err => {
+                    logger.error(err);
+                    done(err);
+                });
+        }
     ));
 
     // 各パスに対するリクエストのルーティング設定
