@@ -1,22 +1,20 @@
 import { Request, Response, Router } from 'express';
 import * as passport from 'passport';
-import { Profile } from 'passport-twitter';
+import User from "../datastore/User";
 
-const setting = Router();
+const edit = Router();
 
-type URequest = Request & { user: Profile };
+type URequest = Request & { user: User };
 
-setting.get('/',
+edit.get('/',
     passport.authenticate(
         'twitter',
-        {
-            failureRedirect: '/fail-auth',
-        }),
-    (req: URequest, res: Response) => {
-        res.render('setting', {
-            title: 'Setting'
-        });
-    }
+        (req: URequest, res: Response) => {
+            res.render('edit', {
+                title: 'Edit'
+            });
+        }
+    )
 );
 
-export default setting;
+export default edit;
