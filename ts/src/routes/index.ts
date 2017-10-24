@@ -2,9 +2,11 @@ import { Router } from 'express';
 
 const indexRouter = Router();
 
+// トップページへのリクエストに対応します。
 indexRouter.get('/', (req, res) => {
     res.render('index', {
-        title: 'Top'
+        title: 'Top',
+        user: req.user
     });
 });
 

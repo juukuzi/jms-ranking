@@ -1,5 +1,5 @@
 declare module '@google-cloud/logging-winston' {
-    import * as winston from "winston";
-    function LoggingWinston(): winston.TransportInstance;
-    export = LoggingWinston;
+    import { TransportInstance } from 'winston';
+    const m: TransportInstance;
+    export = m;
 }
