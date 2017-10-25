@@ -1,6 +1,7 @@
 import * as path from 'path';
 import * as express from 'express';
-import { Application, NextFunction, Request, Response} from "express";
+import { Application, NextFunction, Request, Response} from 'express';
+import * as bodyParser from 'body-parser';
 import * as session from 'express-session';
 import connectDatastore = require('@google-cloud/connect-datastore');
 import * as passport from 'passport';
@@ -9,10 +10,10 @@ import index from './routes/index';
 import edit from './routes/edit';
 import crawl from './routes/crawl';
 import auth from './routes/auth';
-import config from "./config";
-import datastore from "./datastore/datastore";
-import User from "./datastore/User";
-import logger from "./logger";
+import config from './config';
+import datastore from './datastore/datastore';
+import User from './datastore/User';
+import logger from './logger';
 
 
 export default function setup(): Application {
@@ -26,6 +27,9 @@ export default function setup(): Application {
 
     // publicフォルダの中身をwebに公開
     app.use(express.static(path.join(__dirname, '..', '..', 'resources', 'public')));
+
+    // POSTパラメーター処理するようのやつ
+    app.use(bodyParser.urlencoded({ extended: true }));
 
     // passport用各種設定
     const DatastoreStore = connectDatastore(session);

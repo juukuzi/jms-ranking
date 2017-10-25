@@ -4,7 +4,12 @@ block content
   header
     h1 キャラクター情報編集
 
-  form#character-infomatin
+  if updated
+    .alert.alert-success(role="alert") 更新しました。
+  else if err
+    .alert.alert-danger(role="alert") 失敗しました…。
+
+  form#character-infomatin(method="POST")
 
     .form-group
       label(for="name") キャラクター名

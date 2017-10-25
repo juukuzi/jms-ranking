@@ -106,6 +106,22 @@ namespace User {
 
     }
 
+
+    /**
+     * @param user 更新するユーザー情報
+     * @returns 終わったときよう
+     */
+    export async function update(user: User): Promise<void> {
+
+        const key = datastore.key(['User', user.id]);
+
+        await datastore.update({
+            key,
+            data: user
+        });
+
+    }
+
 }
 
 
