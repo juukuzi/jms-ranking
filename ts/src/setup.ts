@@ -15,7 +15,7 @@ import User from "./datastore/User";
 import logger from "./logger";
 
 
-export default function setup(production: boolean): Application {
+export default function setup(): Application {
 
     // expressでやってく。
     const app = express();
@@ -31,9 +31,9 @@ export default function setup(production: boolean): Application {
     const DatastoreStore = connectDatastore(session);
 
     app.use(session({
-        store: production ? new DatastoreStore({
+        store: new DatastoreStore({
             dataset: datastore
-        }) : undefined,
+        }),
         secret: config.sessionKey,
         resave: false,
         saveUninitialized: false
@@ -75,6 +75,7 @@ export default function setup(production: boolean): Application {
     app.use('/edit', edit);
     app.use('/crawl', crawl);
     app.use('/auth', auth);
+    app.get('/error', (req, res) => res.render('error'));
 
     // catch 404 and forward to error handler
     type SError = Error & { status?: number };

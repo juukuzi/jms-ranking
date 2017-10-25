@@ -40,17 +40,22 @@ namespace User {
      * @param id TwitterのID値（数字）の文字列
      * @returns 見つかったらUser なかったらエラー
      */
-    export async function findById(id: string): Promise<User> {
+    export async function findById(id: string): Promise<User | undefined> {
 
         const key = datastore.key(['User', id]);
 
-        const user = await datastore.get(key);
+        const result = await datastore.get(key);
+
+        const user = result[0];
 
         if (isUser(user)) {
             return user;
 
+        } else if(user === void 0) {
+            return undefined;
+
         } else {
-            throw { message: 'undefined user', user };
+            throw { message: 'user format is wrong', user };
 
         }
     }
@@ -65,24 +70,18 @@ namespace User {
      */
     export async function signUp(id: string, userName: string, token: string, tokenSecret: string): Promise<User> {
 
-        // 食い違いがあったらいけないのでトランザクション使う
-        const transaction = datastore.transaction();
-        await transaction.run();
-
         // idをkye値に使うよ
         const key = datastore.key(['User', id]);
 
         // とりあえず保存されているものがあるか探すよ
-        const entity = await datastore.get(key);
+        const result = await datastore.get(key);
+        const entity = result[0];
         let user: User;
 
         if (isUser(entity)) {
             // とってこれた　＝　登録済みならそれに上書き
             user = {
-                id: entity.id,
-                characterName: entity.characterName,
-                world: entity.world,
-                category: entity.category,
+                ...entity,
                 userName,
                 token,
                 tokenSecret
@@ -98,13 +97,10 @@ namespace User {
         }
 
         // 保存しておく
-        await transaction.upsert({
+        await datastore.upsert({
             key,
             data: user
         });
-
-        // コミットして終わったら返却
-        await transaction.commit();
 
         return user;
 
