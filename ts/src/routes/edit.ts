@@ -25,8 +25,10 @@ edit.get('/',
     ensureLoggedIn(),
     (req: Request, res: Response) => {
 
-        params.user = req.user;
-        res.render('edit', params);
+        res.render('edit', {
+            ...params,
+            user: req.user
+        });
 
     }
 );
@@ -40,16 +42,19 @@ edit.post('/',
         user.world = req.body.world;
         user.characterName = req.body.characterName;
 
-        params.user = user;
-
         User.update(user)
             .then(() => {
-                params.updated = true;
-                res.render('edit', params);
+                res.render('edit', {
+                    ...params,
+                    user,
+                    updated: true
+                });
             })
             .catch(err => {
-                params.err = err;
-                res.render('edit', params);
+                res.render('edit', {
+                    ...params,
+                    err
+                });
             });
     });
 
