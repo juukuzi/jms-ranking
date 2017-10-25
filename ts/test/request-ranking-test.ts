@@ -14,11 +14,11 @@ describe('request ranking', () => {
 
     });
 
-    it('MNjoe-san', async () => {
-        const ranking = await requestRanking(World.ALL, Category.ALL);
-        const mnjoe = ranking.characters[0];
-        expect(mnjoe.name).to.equal('MNjoe');
-        expect(mnjoe.level).to.equal(250);
-    });
+    // it('MNjoe-san', async () => {
+    //     const ranking = await requestRanking(World.ALL, Category.ALL);
+    //     const mnjoe = ranking.characters[0];
+    //     expect(mnjoe.name).to.equal('MNjoe');
+    //     expect(mnjoe.level).to.equal(250);
+    // });
 
 });

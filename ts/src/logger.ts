@@ -1,13 +1,6 @@
 import * as winston from 'winston';
 import gcloudTransport = require('@google-cloud/logging-winston');
 
-const logger = new winston.Logger({
-    level: 'debug',
-    transports: [
-        // new winston.transports.Console()
-    ]
-});
+winston.add(gcloudTransport);
 
-logger.add(gcloudTransport);
-
-export default logger;
+export default winston;

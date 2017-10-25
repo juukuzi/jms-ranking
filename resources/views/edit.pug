@@ -1,6 +1,25 @@
 extends layout
 
 block content
-
   header
-   h1 キャラクター情報編集
+    h1 キャラクター情報編集
+
+  form#character-infomatin
+
+    .form-group
+      label(for="name") キャラクター名
+      input#name.form-control(required=true)
+
+    .form-group
+      label(for="world") ワールド
+      select#world.form-control(required=true)
+        each w in world
+          option(value= w)= w
+
+    .form-group
+      label(for="job") 職業
+      select#job.form-control(required=true)
+        each c in category
+          option(value= c)= c
+
+    button.btn.button-primary(type="submit") 更新

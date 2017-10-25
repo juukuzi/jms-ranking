@@ -1,4 +1,4 @@
-import datastore from "./datastore";
+import datastore from './datastore';
 
 
 /**
@@ -38,9 +38,9 @@ namespace User {
 
     /**
      * @param id TwitterのID値（数字）の文字列
-     * @returns 見つかったらそれ、なかったらundefinedなPromise
+     * @returns 見つかったらUser なかったらエラー
      */
-    export async function findById(id: string): Promise<User | undefined> {
+    export async function findById(id: string): Promise<User> {
 
         const key = datastore.key(['User', id]);
 
@@ -50,7 +50,8 @@ namespace User {
             return user;
 
         } else {
-            return undefined;
+            throw { message: 'undefined user', user };
+
         }
     }
 
@@ -76,21 +77,31 @@ namespace User {
         let user: User;
 
         if (isUser(entity)) {
-            // とってこれた　＝　登録済みならそれ
-            user = entity;
+            // とってこれた　＝　登録済みならそれに上書き
+            user = {
+                id: entity.id,
+                characterName: entity.characterName,
+                world: entity.world,
+                category: entity.category,
+                userName,
+                token,
+                tokenSecret
+            };
         } else {
-            // なかったときは新しく作って保存
+            // なかったときは新しく作成
             user = {
                 id,
                 userName,
                 token,
                 tokenSecret
             };
-            await transaction.save({
-                key,
-                data: user
-            });
         }
+
+        // 保存しておく
+        await transaction.upsert({
+            key,
+            data: user
+        });
 
         // コミットして終わったら返却
         await transaction.commit();

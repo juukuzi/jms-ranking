@@ -4,29 +4,28 @@ block content
 
   // トップページ
 
-  header
-    h1 JMS Ranking Tweet
-
-  p メイプルストーリーの毎日の経験値・ランキング変動をツイートするサービスです。
-
   // ログインしているユーザーの状況に応じて表示
-  .status
-    if user
-      p= `ようこそ、@${user.userName}さん！`
+  .card
+    h2.card-header STATUS
+    .card-body
+      if user
+        p.card-text= `ようこそ、@${user.userName}さん！`
 
-      if user.characterName
-        .status__character
-          ul
+        if user.characterName
+          ul.card-text
             li= user.characterName
             li= user.world
             li= user.category
-      else
-        p キャラクターが未設定です。
+        else
+          p.caard-text キャラクターが未設定です。
 
-    else
-      p ログインしていません。
-        a(href='/auth/twitter') ログイン
+        a.card-link(href='/edit') 設定
+
+      else
+        p ログインしていません。
+          a.card-link(href='/auth/twitter') ログイン
 
   // ユーザー向け読んでね事項
-  div(class='readme')
-    include:markdown-it ./includes/readme.md
+  .readme.card
+
+    include ./includes/readme

@@ -15,7 +15,7 @@ import User from "./datastore/User";
 import logger from "./logger";
 
 
-export default function setup(): Application {
+export default function setup(production: boolean): Application {
 
     // expressでやってく。
     const app = express();
@@ -31,9 +31,9 @@ export default function setup(): Application {
     const DatastoreStore = connectDatastore(session);
 
     app.use(session({
-        store: new DatastoreStore({
+        store: production ? new DatastoreStore({
             dataset: datastore
-        }),
+        }) : undefined,
         secret: config.sessionKey,
         resave: false,
         saveUninitialized: false
@@ -48,21 +48,24 @@ export default function setup(): Application {
     passport.deserializeUser((id: string, done) => {
         User.findById(id)
             .then(user => done(null, user))
-            .catch(err => done(err));
+            .catch(err => {
+                logger.error(err);
+                done(err);
+            });
     });
 
     passport.use(new TwitterStrategy(
         {
             consumerKey: config.twitter.consumerKey,
             consumerSecret: config.twitter.consumerSecret,
-            callbackURL: 'https://jms-ranking-tweet.appspot.com/'
+            callbackURL: 'https://jms-ranking-tweet.appspot.com/auth/twitter/callback'
         },
         (token, tokenSecret, profile, done) => {
             User.signUp(profile.id, profile.username, token, tokenSecret)
                 .then(user => done(null, user))
                 .catch(err => {
                     logger.error(err);
-                    done(err);
+                    done(err, null);
                 });
         }
     ));

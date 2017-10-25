@@ -104,7 +104,7 @@ function requestRanking(world: World, category: Category): Promise<RankingList> 
         .then(html =>
             Promise.resolve({
                 dateString: date,
-                worldKey: World.key(world),
+                worldKey: World.keyOf(world),
                 categoryKey: Category.key(category),
                 characters: parseHTML(html)
             })
