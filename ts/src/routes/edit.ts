@@ -4,10 +4,15 @@ import World from "../scraping/World";
 import Category from "../scraping/Category";
 import User from "../datastore/User";
 
+interface WorldNames {
+    [index: string]: string;
+}
+
 interface Params {
     title: string;
-    world: string[];
-    category: string[];
+    world: [string, World][];
+    worldName: WorldNames;
+    category: [string, Category][];
     user?: User;
     updated?: boolean;
     err?: Error;
@@ -17,8 +22,14 @@ const edit = Router();
 
 const params: Params = {
     title: 'Edit',
-    world: [...World.map.keys()],
-    category: [...Category.map.keys()]
+    world: [...World.map.entries()],
+    worldName: {
+        KAEDE: 'かえで',
+        YUKARI: 'ゆかり',
+        KURUMI: 'くるみ',
+        REBOOT: 'リブート'
+    },
+    category: [...Category.map.entries()]
 };
 
 edit.get('/',
@@ -27,7 +38,7 @@ edit.get('/',
 
         res.render('edit', {
             ...params,
-            user: req.user
+            user: /*req.user*/ {}
         });
 
     }

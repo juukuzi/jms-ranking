@@ -29,7 +29,8 @@ export default function setup(): Application {
     app.use(express.static(path.join(__dirname, '..', '..', 'resources', 'public')));
 
     // POSTパラメーター処理するようのやつ
-    app.use(bodyParser.urlencoded({ extended: true }));
+    app.use(bodyParser.json());
+    app.use(bodyParser.urlencoded({ extended: false }));
 
     // passport用各種設定
     const DatastoreStore = connectDatastore(session);

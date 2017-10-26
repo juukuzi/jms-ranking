@@ -9,22 +9,28 @@ block content
   else if err
     .alert.alert-danger(role="alert") 失敗しました…。
 
-  form#character-infomatin(method="POST")
+  form#character-infomatin(action="/edit" method="POST")
 
     .form-group
-      label(for="name") キャラクター名
-      input#name.form-control(required=true)
+      label(for="characterName") キャラクター名
+      input#characterName.form-control(name="characterName" required=true value= user.characterName)
 
     .form-group
       label(for="world") ワールド
-      select#world.form-control(required=true)
+      select#world.form-control(name="world" required=true)
         each w in world
-          option(value= w)= w
+          if user.world === w[0]
+            option(value= w[0] selected)= worldName[w[0]]
+          else
+            option(value= w[0])= w[1]= worldName[w[0]]
 
     .form-group
-      label(for="job") 職業
-      select#job.form-control(required=true)
+      label(for="category") 職業
+      select#category.form-control(name="category" required=true)
         each c in category
-          option(value= c)= c
+          if user.category === c[0]
+            option(value= c[0] selected)= c[1]
+          else
+            option(value= c[0])= c[1]
 
     button.btn.button-primary(type="submit") 更新
