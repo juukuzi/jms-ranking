@@ -1,4 +1,5 @@
 import datastore from './datastore';
+import logger from '../logger';
 
 
 /**
@@ -26,6 +27,9 @@ interface User {
 
     /** access token secret */
     tokenSecret: string;
+
+    /** 無効化されてたらtrue */
+    disabled: boolean;
 }
 
 
@@ -84,7 +88,8 @@ namespace User {
                 ...entity,
                 userName,
                 token,
-                tokenSecret
+                tokenSecret,
+                disabled: false
             };
         } else {
             // なかったときは新しく作成
@@ -92,7 +97,8 @@ namespace User {
                 id,
                 userName,
                 token,
-                tokenSecret
+                tokenSecret,
+                disabled: false
             };
         }
 
@@ -119,6 +125,29 @@ namespace User {
             key,
             data: user
         });
+
+    }
+
+
+    /**
+     * Datastoreに保存されている有効な全ユーザーを取得してきます。
+     * @returns Datastoreに保存されているユーザー取ってくるやつ
+     */
+    export async function findAll(): Promise<User[]> {
+
+        const query = datastore.createQuery('User')
+            .filter('disabled', '=', false);
+
+        const result = await datastore.runQuery(query);
+
+        const users: User[] = [];
+
+        result.forEach(entity => {
+            if (isUser(entity)) users.push(entity);
+            else logger.warn('found strange user entity', entity);
+        });
+
+        return users;
 
     }
 
