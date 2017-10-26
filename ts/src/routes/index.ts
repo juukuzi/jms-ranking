@@ -1,6 +1,8 @@
 import { Router } from 'express';
 import { Profile } from "passport-twitter";
 import User from "../datastore/User";
+import World from '../scraping/World';
+import Category from '../scraping/Category';
 
 const indexRouter = Router();
 
@@ -17,7 +19,9 @@ indexRouter.get('/', async (req, res) => {
 
     res.render('index', {
         title: 'Top',
-        user
+        user,
+        World,
+        Category
     });
 
 });

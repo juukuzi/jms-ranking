@@ -136,7 +136,9 @@ namespace User {
     export async function findAll(): Promise<User[]> {
 
         const query = datastore.createQuery('User')
-            .filter('disabled', '=', false);
+            .filter('disabled', '=', false)
+            .order('world')
+            .order('category');
 
         const result = await datastore.runQuery(query);
 

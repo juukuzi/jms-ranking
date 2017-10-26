@@ -14,8 +14,8 @@ block content
         if user.characterName
           ul.card-text
             li= user.characterName
-            li= user.world
-            li= user.category
+            li= World.name(user.world)
+            li= Category[user.category]
         else
           p.caard-text キャラクターが未設定です。
 

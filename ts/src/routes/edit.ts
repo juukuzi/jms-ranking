@@ -38,7 +38,7 @@ edit.get('/',
 
         res.render('edit', {
             ...params,
-            user: /*req.user*/ {}
+            user: req.user
         });
 
     }

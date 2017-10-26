@@ -25,6 +25,21 @@ namespace World {
         return World[value];
     }
 
+    export function name(key: string): string {
+        switch(key) {
+            case 'KAEDE':
+                return 'かえで';
+            case 'KURUMI':
+                return 'くるみ';
+            case 'YUKARI':
+                return 'ゆかり';
+            case 'REBOOT':
+                return 'リブート';
+            default:
+                throw 'unknown world key';
+        }
+    }
+
 }
 
 

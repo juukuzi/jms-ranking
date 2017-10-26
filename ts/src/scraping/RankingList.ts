@@ -1,4 +1,4 @@
-import PlayerCharacterData from "./PlayerCharacterData";
+import PlayerCharacterData from './PlayerCharacterData';
 
 interface RankingList {
     dateString: string;
