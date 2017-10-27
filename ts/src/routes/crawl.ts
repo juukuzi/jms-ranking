@@ -1,5 +1,6 @@
 import { Request, Response, Router } from 'express';
 import logger from "../logger";
+import scraping from "../scraping/scraping";
 
 const crawlRouter = Router();
 
@@ -12,8 +13,8 @@ crawlRouter.get('/', async (req: Request, res: Response) => {
 
     if (fromCron) {
         try {
-            // await crawl();
             logger.info('get crawl request');
+            await scraping();
             res.sendStatus(200);
 
         } catch (err) {

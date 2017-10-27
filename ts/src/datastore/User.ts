@@ -41,7 +41,13 @@ namespace User {
 
     /** ユーザー型っぽいことを確認するための適当なタイプガード */
     function isUser(object: any): object is User {
-        return object && object.userName;
+        return object &&
+            object.hasOwnProperty('id') &&
+            object.hasOwnProperty('userName') &&
+            object.hasOwnProperty('token') &&
+            object.hasOwnProperty('tokenSecret') &&
+            object.hasOwnProperty('disabled') &&
+            object.hasOwnProperty('expData');
     }
 
     /**
@@ -145,10 +151,11 @@ namespace User {
             .order('category');
 
         const result = await datastore.runQuery(query);
+        const entities = result[0];
 
         const users: User[] = [];
 
-        result.forEach(entity => {
+        entities.forEach(entity => {
             if (isUser(entity)) users.push(entity);
             else logger.warn('found strange user entity', entity);
         });
