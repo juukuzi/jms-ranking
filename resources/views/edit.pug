@@ -5,9 +5,18 @@ block content
     h1 キャラクター情報編集
 
   if updated
-    .alert.alert-success(role="alert") 更新しました。
+    .alert.alert-success(role="alert")
+      strong 更新に成功しました。
+  else if notFound
+    .alert.alert-worn(role="alert")
+      strong 該当のキャラクターがランキングに見つかりませんでした。
+      | 入力内容が正しいか確認してください。
+      br
+      | いまのところ、ランキングにのっていないキャラクターについてはサポートしていません。ごめんなさい。
   else if err
-    .alert.alert-danger(role="alert") 失敗しました…。
+    .alert.alert-danger(role="alert")
+      strong エラーが発生して更新に失敗しました…。
+
 
   form#character-infomatin(action="/edit" method="POST")
 

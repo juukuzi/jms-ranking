@@ -1,9 +1,9 @@
 import { Request, Response, Router } from 'express';
-import logger from "../logger";
-import scraping from "../scraping/scraping";
-import User from "../datastore/User";
-import tweetMessage from "./tweetMessage";
-import { tweet } from "../tweet";
+import logger from '../logger';
+import scraping from '../scraping/scraping';
+import User from '../datastore/User';
+import tweetMessage from './tweetMessage';
+import tweet from '../tweet';
 
 const cronRouter = Router();
 

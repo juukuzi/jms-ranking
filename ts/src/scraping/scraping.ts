@@ -23,7 +23,7 @@ function suitable(ranking: RankingList, user: User): boolean {
 }
 
 /**
- *
+ * バーっと必要な分を取得してきて情報を取得するよ。
  */
 export default async function scraping(): Promise<void> {
 
@@ -39,6 +39,11 @@ export default async function scraping(): Promise<void> {
 
     // 各ユーザーに対して
     for (const user of users) {
+
+        // このユーザーが今日分のデーターをもう取得していたらスキップするよ。
+        // 新規登録したユーザーだとありうるよ。
+        const last = user.expData[user.expData.length - 1];
+        if (last && last.date.toDateString() === ranking.date.toDateString()) continue;
 
         if (!suitable(ranking, user)) {
             // ランキングがちがったら取得しなおす

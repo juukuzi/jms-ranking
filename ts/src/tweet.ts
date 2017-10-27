@@ -11,7 +11,7 @@ import config from './config';
  * @param user ツイートするユーザー
  * @param message ツイートする文字列
  */
-export function tweet(user: User, message: string): void {
+export default function tweet(user: User, message: string): void {
 
     const twit = new Twit({
         consumer_key: config.twitter.consumerKey,

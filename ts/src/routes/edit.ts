@@ -3,7 +3,10 @@ import { ensureLoggedIn } from "connect-ensure-login";
 import World from "../scraping/World";
 import Category from "../scraping/Category";
 import User from "../datastore/User";
-import {tweet} from "../tweet";
+import tweet from "../tweet";
+import requestRanking from "../scraping/requestRanking";
+import PlayerCharacterData from "../scraping/PlayerCharacterData";
+import logger from '../logger';
 
 interface WorldNames {
     [index: string]: string;
@@ -16,6 +19,7 @@ interface Params {
     category: [string, Category][];
     user?: User;
     updated?: boolean;
+    notFound?: boolean;
     err?: Error;
 }
 
@@ -47,36 +51,107 @@ edit.get('/',
 
 edit.post('/',
     ensureLoggedIn(),
-    (req: Request, res: Response) => {
+    async (req: Request, res: Response) => {
+
+        // POSTパラメーターの取得
+        const category = req.body.category;
+        const world = req.body.world;
+        const characterName = req.body.characterName;
+
+        // ログイン中のユーザー情報を取得
         const user: User = req.user;
 
-        user.category = req.body.category;
-        user.world = req.body.world;
-        user.characterName = req.body.characterName;
-        user.disabled = false;
+        try {
 
-        const world: string = World.name(user.world!);
-        const category: string = Category.map.get(user.category!)!;
+            if (req.query.force === 'true') {
+                // ランキングにのっているかどうかに関わらず強制登録するとき。
+                user.category = category;
+                user.world = world;
+                user.characterName = characterName;
+                user.disabled = false;
+                User.pushExpData(user, {
+                    date: new Date()
+                });
 
-        User.update(user)
-            .then(() => {
+                await User.update(user);
 
-                // 情報更新したよツイート
-                tweet(user, `キャラクター情報を設定しました。\r\n${user.characterName}（${world} / ${category}）\r\n#JMSRankingTweet`);
+                const worldName: string = World.name(user.world!);
+                const categoryName: string = Category.map.get(user.category!)!;
+                tweet(user, `キャラクター情報を登録しました。\r\n${user.characterName}（${worldName} / ${categoryName}\r\n#JMSRankingTweet`);
 
-                // 更新しました表示
                 res.render('edit', {
                     ...params,
                     user,
                     updated: true
                 });
-            })
-            .catch(err => {
-                res.render('edit', {
-                    ...params,
-                    err
-                });
+
+            } else {
+                // ランキングサイトにアクセスしてみて、該当キャラクターのデータがあるか確認
+                const data = await check(world, category, characterName);
+
+                if (data) {
+                    // ランキングにのっていたとき
+                    // ユーザー情報の必要な部分を書き換える。
+                    user.category = category;
+                    user.world = world;
+                    user.characterName = characterName;
+                    user.disabled = false;
+
+                    if (user.expData.length === 0) {
+                        // 初回登録時のみの処理
+                        User.pushExpData(user, {
+                            date: new Date(),
+                            level: data.level,
+                            exp: data.exp
+                        });
+                        const worldName: string = World.name(user.world!);
+                        const categoryName: string = Category.map.get(user.category!)!;
+                        // 情報更新したよツイート
+                        tweet(user, `キャラクター情報を登録しました。\r\n${user.characterName}（${worldName} / ${categoryName}）\r\n現在のレベル：　${data.level}\r\n#JMSRankingTweet`);
+                    }
+
+                    // Datastoreに上書き保存。
+                    await User.update(user);
+
+                    res.render('edit', {
+                        ...params,
+                        user,
+                        updated: true,
+                    });
+
+                } else {
+                    // なかったとき
+                    res.render('edit', {
+                        ...params,
+                        user,
+                        notFound: true,
+                        updated: false
+                    });
+                }
+            }
+
+        } catch (err) {
+            logger.error(err);
+            res.render('edit', {
+                ...params,
+                err
             });
+        }
     });
+
+
+async function check(world: string, category: string, characterName: string): Promise<PlayerCharacterData | undefined> {
+
+    // 受け取った情報をもとにランキング情報を取得
+    const ranking = await requestRanking(
+        World.map.get(world)!,
+        Category.map.get(category)!
+    );
+
+    return ranking.characters.find(c => c.name === characterName);
+
+}
+
+
 
 export default edit;
