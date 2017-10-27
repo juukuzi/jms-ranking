@@ -20,7 +20,7 @@ namespace ExpData {
      * @param to
      * @returns 経験値の変位
      */
-    function diff(from: ExpData, to: ExpData): number {
+    export function diff(from: ExpData, to: ExpData): number {
         if (from.level && to.level) {
             // 両方とも経験値データが入っていたとき
             let exp = to.exp! - from.exp!;
@@ -34,3 +34,6 @@ namespace ExpData {
     }
 
 }
+
+
+export default ExpData;

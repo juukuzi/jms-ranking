@@ -2,11 +2,11 @@ import { Request, Response, Router } from 'express';
 import logger from "../logger";
 import scraping from "../scraping/scraping";
 
-const crawlRouter = Router();
+const cronRouter = Router();
 
 // クローリングを開始するリクエストに対応。
 // cron.yamlで設定してあるタイミングでこれが呼び出されるはず。
-crawlRouter.get('/', async (req: Request, res: Response) => {
+cronRouter.get('/crawl', async (req: Request, res: Response) => {
 
     // GCPのcronからリクエストがきたときは、このヘッダーがついてるらしいです
     const fromCron = req.get('X-Appengine-Cron') === 'true';
@@ -30,4 +30,4 @@ crawlRouter.get('/', async (req: Request, res: Response) => {
 });
 
 
-export default crawlRouter;
+export default cronRouter;

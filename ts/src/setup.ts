@@ -8,7 +8,7 @@ import * as passport from 'passport';
 import { Strategy as TwitterStrategy} from 'passport-twitter';
 import index from './routes/index';
 import edit from './routes/edit';
-import crawl from './routes/crawl';
+import cron from './routes/cron';
 import auth from './routes/auth';
 import config from './config';
 import datastore from './datastore/datastore';
@@ -78,7 +78,7 @@ export default function setup(): Application {
     // 各パスに対するリクエストのルーティング設定
     app.use('/', index);
     app.use('/edit', edit);
-    app.use('/crawl', crawl);
+    app.use('/cron', cron);
     app.use('/auth', auth);
     app.get('/error', (req, res) => res.render('error'));
 
