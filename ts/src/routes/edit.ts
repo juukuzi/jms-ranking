@@ -47,11 +47,12 @@ edit.get('/',
 edit.post('/',
     ensureLoggedIn(),
     (req: Request, res: Response) => {
-        const user = req.user;
+        const user: User = req.user;
 
         user.category = req.body.category;
         user.world = req.body.world;
         user.characterName = req.body.characterName;
+        user.disabled = false;
 
         User.update(user)
             .then(() => {

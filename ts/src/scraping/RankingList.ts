@@ -1,7 +1,7 @@
 import PlayerCharacterData from './PlayerCharacterData';
 
 interface RankingList {
-    dateString: string;
+    date: Date;
     worldKey: string;
     categoryKey: string;
     characters: PlayerCharacterData[];

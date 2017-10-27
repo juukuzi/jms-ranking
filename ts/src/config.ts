@@ -7,6 +7,8 @@ interface Config {
 
     sessionKey: string;
 
+    daysToKeepExpData: number;
+
 }
 
 const config: Config = require('../../resources/config.json');

@@ -1,5 +1,6 @@
 import datastore from './datastore';
 import logger from '../logger';
+import config from "../config";
 
 
 /**
@@ -30,6 +31,9 @@ interface User {
 
     /** 無効化されてたらtrue */
     disabled: boolean;
+
+    /** 経験値情報の配列 */
+    expData: ExpData[];
 }
 
 
@@ -88,8 +92,7 @@ namespace User {
                 ...entity,
                 userName,
                 token,
-                tokenSecret,
-                disabled: false
+                tokenSecret
             };
         } else {
             // なかったときは新しく作成
@@ -98,7 +101,8 @@ namespace User {
                 userName,
                 token,
                 tokenSecret,
-                disabled: false
+                disabled: true,
+                expData: []
             };
         }
 
@@ -151,6 +155,13 @@ namespace User {
 
         return users;
 
+    }
+
+    export function pushExpData(user: User, expData: ExpData): void {
+        user.expData.push(expData);
+        while (user.expData.length >= config.daysToKeepExpData) {
+            user.expData.shift();
+        }
     }
 
 }

@@ -11,13 +11,14 @@ block content
       if user
         p.card-text= `ようこそ、@${user.userName}さん！`
 
-        if user.characterName
+        if user.disabled
+          p.caard-text キャラクターが未設定です。
+
+        else
           ul.card-text
             li= user.characterName
             li= World.name(user.world)
             li= Category[user.category]
-        else
-          p.caard-text キャラクターが未設定です。
 
         a.card-link(href='/edit') 設定
 

@@ -98,12 +98,10 @@ function parseHTML(html: string): PlayerCharacterData[] {
  */
 function requestRanking(world: World, category: Category): Promise<RankingList> {
 
-    const date = new Date().toDateString();
-
     return fetchHTML(world, category)
         .then(html =>
             Promise.resolve({
-                dateString: date,
+                date: new Date(),
                 worldKey: World.keyOf(world),
                 categoryKey: Category.key(category),
                 characters: parseHTML(html)
