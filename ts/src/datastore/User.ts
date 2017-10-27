@@ -1,6 +1,7 @@
 import datastore from './datastore';
 import logger from '../logger';
-import config from "../config";
+import config from '../config';
+import ExpData from './ExpData';
 
 
 /**

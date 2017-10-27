@@ -3,6 +3,7 @@ import { ensureLoggedIn } from "connect-ensure-login";
 import World from "../scraping/World";
 import Category from "../scraping/Category";
 import User from "../datastore/User";
+import {tweet} from "../tweet";
 
 interface WorldNames {
     [index: string]: string;
@@ -54,8 +55,16 @@ edit.post('/',
         user.characterName = req.body.characterName;
         user.disabled = false;
 
+        const world: string = World.name(user.world!);
+        const category: string = Category.map.get(user.category!)!;
+
         User.update(user)
             .then(() => {
+
+                // 情報更新したよツイート
+                tweet(user, `キャラクター情報を設定しました。\r\n${user.characterName}（${world} / ${category}）\r\n#JMSRankingTweet`);
+
+                // 更新しました表示
                 res.render('edit', {
                     ...params,
                     user,
