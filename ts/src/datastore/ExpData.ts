@@ -29,7 +29,24 @@ namespace ExpData {
             }
             return exp;
         } else {
-            throw new Error('');
+            throw new Error('empty exp data');
+        }
+    }
+
+    /**
+     * そのレベルの中で経験値が何パーセントたまっているか（小数点第２位まで・切り捨て）
+     *
+     */
+    export function percentage(data: ExpData): number {
+        if (data.level && data.exp !== undefined) {
+            // 小数点第2位まで出したいので、とりあえず10000倍
+            const x100 = ( data.exp / table[data.level] ) * 10000;
+            // 要らない分を切り捨て
+            const floored = Math.floor(x100);
+
+            return floored / 100;
+        } else {
+            throw new Error('empty exp data');
         }
     }
 
