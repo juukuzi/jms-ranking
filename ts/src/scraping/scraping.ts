@@ -23,6 +23,16 @@ function suitable(ranking: RankingList, user: User): boolean {
 }
 
 /**
+ * 同じ日かどうか
+ */
+function sameDate(date1: Date, date2: Date): boolean {
+    return date1 && date2 &&
+        date1.getFullYear() === date2.getFullYear() &&
+        date1.getMonth() === date2.getMonth() &&
+        date1.getDate() === date2.getDate();
+}
+
+/**
  * バーっと必要な分を取得してきて情報を取得するよ。
  */
 export default async function scraping(): Promise<void> {
@@ -43,7 +53,9 @@ export default async function scraping(): Promise<void> {
         // このユーザーが今日分のデーターをもう取得していたらスキップするよ。
         // 新規登録したユーザーだとありうるよ。
         const last = user.expData[user.expData.length - 1];
-        if (last && last.date.toDateString() === ranking.date.toDateString()) continue;
+        if (sameDate(last.date, ranking.date)) {
+            continue;
+        }
 
         if (!suitable(ranking, user)) {
             // ランキングがちがったら取得しなおす

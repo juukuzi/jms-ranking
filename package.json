@@ -10,7 +10,7 @@
     "build": "tsc",
     "deploy": "gcloud app deploy  --project jms-ranking-tweet",
     "start": "node ./out/start.js",
-    "test": "mocha --require ts-node/register --timeout 10000 ./test/*.ts"
+    "test": "mocha --require ts-node/register --timeout 10000 ./ts/test/*.ts"
   },
   "repository": {
     "type": "git",
