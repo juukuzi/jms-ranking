@@ -2,6 +2,9 @@ import * as sourceMapSupport from 'source-map-support';
 import setupApplication from './src/setup';
 import logger from './src/logger';
 
+// タイムゾーンを日本にしておくよ
+process.env.TZ = 'Asia/Tokyo';
+
 // スタックトレースとか読みやすくする。
 sourceMapSupport.install();
 

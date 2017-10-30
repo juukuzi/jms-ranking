@@ -3,6 +3,7 @@ import World from "./World";
 import Category from "./Category";
 import requestRanking from "./requestRanking";
 import RankingList from "./RankingList";
+import logger from '../logger';
 
 /**
  * 指定されたユーザーのキャラクターを含むランキングリストを取得してきます。
@@ -42,7 +43,7 @@ export default async function scraping(): Promise<void> {
     const users = await User.findAll();
 
     // だれも登録されていないとき：おやすみ
-    if (users.length === 0) return;
+    if (users.length === 0) { logger.warn('no user.'); return; }
 
     // とりあえず最初のユーザーの分のランキングを取得
     let ranking = await rankingFor(users[0]);
@@ -54,6 +55,7 @@ export default async function scraping(): Promise<void> {
         // 新規登録したユーザーだとありうるよ。
         const last = user.expData[user.expData.length - 1];
         if (sameDate(last.date, ranking.date)) {
+            logger.debug(`skip user ${user.userName}. last: ${last.date}, ranking: ${ranking.date}`);
             continue;
         }
 

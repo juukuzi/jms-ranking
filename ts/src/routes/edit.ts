@@ -107,7 +107,7 @@ edit.post('/',
                         const worldName: string = World.name(user.world!);
                         const categoryName: string = Category.map.get(user.category!)!;
                         // 情報更新したよツイート
-                        tweet(user, `キャラクター情報を登録しました。\r\n${user.characterName}（${worldName} / ${categoryName}）\r\n現在のレベル：　${data.level}\r\n#JMSRankingTweet`);
+                        tweet(user, `キャラクター情報を登録しました。\r\n${user.characterName}（${worldName} / ${categoryName}）\r\n現在のレベルは ${data.level} です。\r\n#JMSRankingTweet`);
                     }
 
                     // Datastoreに上書き保存。
