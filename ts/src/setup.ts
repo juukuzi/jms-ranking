@@ -10,6 +10,7 @@ import index from './routes/index';
 import edit from './routes/edit';
 import cron from './routes/cron';
 import auth from './routes/auth';
+import revoke from './routes/revoke';
 import config from './config';
 import datastore from './datastore/datastore';
 import User from './datastore/User';
@@ -80,6 +81,7 @@ export default function setup(): Application {
     app.use('/edit', edit);
     app.use('/cron', cron);
     app.use('/auth', auth);
+    app.use('/revoke', revoke);
     app.get('/error', (req, res) => res.render('error'));
 
     // catch 404 and forward to error handler

@@ -20,11 +20,12 @@ block content
             li= World.name(user.world)
             li= Category[user.category]
 
-        a.card-link(href='/edit') 設定
+        a.card-link(href="/edit") 設定
+        a.card-link(href="/revoke") 解除
 
       else
         p.card-text ログインしていません。
-        a.card-link(href='/auth/twitter') ログイン
+        a.card-link(href="/auth/twitter") ログイン
 
   // ユーザー向け読んでね事項
   .readme.card

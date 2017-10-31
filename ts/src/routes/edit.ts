@@ -38,7 +38,7 @@ const params: Params = {
 };
 
 edit.get('/',
-    ensureLoggedIn(),
+    ensureLoggedIn('/auth/twitter'),
     (req: Request, res: Response) => {
 
         res.render('edit', {
@@ -50,7 +50,7 @@ edit.get('/',
 );
 
 edit.post('/',
-    ensureLoggedIn(),
+    ensureLoggedIn('/auth/twitter'),
     async (req: Request, res: Response) => {
 
         // POSTパラメーターの取得

@@ -1,0 +1,25 @@
+extends layout
+
+block content
+
+  // 登録解除ページ
+
+  h2 登録解除
+
+  p このページからは、ユーザー登録を解除して、自動ツイートサービスを停止することができます。
+
+  if revoked
+    .alert.alert-success(role="alert")
+      strong 解除に成功しました。
+      | 念のため、Twitterの
+      a(href="https://twitter.com/settings/applications?lang=ja") アプリ連携
+      | のページからも当サービスへの許可を取り消しておいてください。
+
+  if err
+    .alert.alert-danger(role="alert")
+      strong （多分）解除に失敗しました……
+      | お手数ですが、管理者に連絡してください。
+
+  if user
+    form(action="/revoke" method="POST")
+      button.btn.btn-danger(type="submit") 解除

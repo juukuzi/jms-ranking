@@ -175,6 +175,12 @@ namespace User {
         }
     }
 
+    /** 引数で指定されたユーザーの情報をdatastoreから削除します。 */
+    export async function revoke(user: User): Promise<void> {
+        const key = datastore.key(['User', user.id]);
+        await datastore.delete(key);
+    }
+
 }
 
 
