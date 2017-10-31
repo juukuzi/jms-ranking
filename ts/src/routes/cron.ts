@@ -46,7 +46,11 @@ cronRouter.get('/tweet', async (req: Request, res: Response) => {
 
             for (const user of users) {
                 const message = tweetMessage(user);
-                tweet(user, message);
+
+                if (message) {
+                    // 呟きたくないときは空文字列が入っているので、こう
+                    tweet(user, message);
+                }
             }
 
             res.sendStatus(200);

@@ -57,6 +57,7 @@ edit.post('/',
         const category = req.body.category;
         const world = req.body.world;
         const characterName = req.body.characterName;
+        const tweetOnlyActiveDay = req.body.tweetOnlyActiveDay;
 
         // ログイン中のユーザー情報を取得
         const user: User = req.user;
@@ -68,6 +69,7 @@ edit.post('/',
                 user.category = category;
                 user.world = world;
                 user.characterName = characterName;
+                user.tweetOnlyActiveDay = tweetOnlyActiveDay;
                 user.disabled = false;
                 User.pushExpData(user, {
                     date: new Date()
@@ -95,6 +97,7 @@ edit.post('/',
                     user.category = category;
                     user.world = world;
                     user.characterName = characterName;
+                    user.tweetOnlyActiveDay = tweetOnlyActiveDay;
                     user.disabled = false;
 
                     if (user.expData.length === 0) {

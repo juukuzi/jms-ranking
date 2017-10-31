@@ -3,7 +3,10 @@ import World from "../scraping/World";
 import Category from "../scraping/Category";
 import ExpData from '../datastore/ExpData';
 
-
+/**
+ * @param user ツイートを生成する対象のユーザー情報
+ * @returns ツイートするメッセージ。ツイートしないときは空文字列。
+ */
 export default function tweetMessage(user: User): string {
 
     // ワールド名と職業名を取得
@@ -42,7 +45,14 @@ export default function tweetMessage(user: User): string {
                 // Exp% : 12.22% -> 0.22%
                 // #JMSRankingTweet
 
-                message += `\r\nGain : ${Number(ExpData.diff(yesterday, today)).toLocaleString()} exp`;
+                const diff = ExpData.diff(yesterday, today);
+
+                if (user.tweetOnlyActiveDay && diff === 0) {
+                    // 差分があったときだけツイートするオプション
+                    return '';
+                }
+
+                message += `\r\nGain : ${Number(diff).toLocaleString()} exp`;
                 if (today.level > yesterday.level) {
                     message += `\r\nLevel: ${yesterday.level} -> ${today.level} UP!`;
                 } else {

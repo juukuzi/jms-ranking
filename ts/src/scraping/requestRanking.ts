@@ -1,9 +1,9 @@
 import * as request from 'request';
 import * as cheerio from 'cheerio';
 import PlayerCharacterData from './PlayerCharacterData';
-import World from "./World";
-import Category from "./Category";
-import RankingList from "./RankingList";
+import World from './World';
+import Category from './Category';
+import RankingList from './RankingList';
 
 /**
  * Hangameのランキングページにアクセスして、html文字列をもらってきます。
