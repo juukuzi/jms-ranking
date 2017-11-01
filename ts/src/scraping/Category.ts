@@ -11,7 +11,7 @@ enum Category {
     THIEF = '盗賊',
     DUAL_BLADE = 'デュアルブレイド',
     PIRATE = '海賊',
-    CANNONEER = 'キャノンマスター',
+    CANNONEER = 'キャノンシューター',
     JETT = 'ジェット',
     DAWN_WARRIOR = 'ソウルマスター',
     BLAZE_WIZARD = 'フレイムウィザード',
