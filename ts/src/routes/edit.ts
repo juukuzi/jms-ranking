@@ -20,6 +20,7 @@ interface Params {
     user?: User;
     updated?: boolean;
     notFound?: boolean;
+    countStop?: boolean;
     err?: Error;
 }
 
@@ -93,34 +94,47 @@ edit.post('/',
 
                 if (data) {
                     // ランキングにのっていたとき
-                    // ユーザー情報の必要な部分を書き換える。
-                    user.category = category;
-                    user.world = world;
-                    user.characterName = characterName;
-                    user.tweetOnlyActiveDay = tweetOnlyActiveDay;
-                    user.disabled = false;
 
-                    if (user.expData.length === 0) {
-                        // 初回登録時のみの処理
-                        User.pushExpData(user, {
-                            date: new Date(),
-                            level: data.level,
-                            exp: data.exp
+                    if (data.level === 250) {
+                        // レベル250のとき
+                        res.render('edit', {
+                            ...params,
+                            user,
+                            countStop: true
                         });
-                        const worldName: string = World.name(user.world!);
-                        const categoryName: string = Category.map.get(user.category!)!;
-                        // 情報更新したよツイート
-                        tweet(user, `キャラクター情報を登録しました。\r\n${user.characterName}（${worldName} / ${categoryName}）\r\n現在のレベルは ${data.level} です。\r\n#JMSRankingTweet`);
+
+                    } else {
+                        // いちばん正常系
+                        // ユーザー情報の必要な部分を書き換える。
+                        user.category = category;
+                        user.world = world;
+                        user.characterName = characterName;
+                        user.tweetOnlyActiveDay = tweetOnlyActiveDay;
+                        user.disabled = false;
+
+                        if (user.expData.length === 0) {
+                            // 初回登録時のみの処理
+                            User.pushExpData(user, {
+                                date: new Date(),
+                                level: data.level,
+                                exp: data.exp
+                            });
+                            const worldName: string = World.name(user.world!);
+                            const categoryName: string = Category.map.get(user.category!)!;
+                            // 情報更新したよツイート
+                            tweet(user, `キャラクター情報を登録しました。\r\n${user.characterName}（${worldName} / ${categoryName}）\r\n現在のレベルは ${data.level} です。\r\n#JMSRankingTweet`);
+                        }
+
+                        // Datastoreに上書き保存。
+                        await User.update(user);
+
+                        res.render('edit', {
+                            ...params,
+                            user,
+                            updated: true,
+                        });
+
                     }
-
-                    // Datastoreに上書き保存。
-                    await User.update(user);
-
-                    res.render('edit', {
-                        ...params,
-                        user,
-                        updated: true,
-                    });
 
                 } else {
                     // なかったとき

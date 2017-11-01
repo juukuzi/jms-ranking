@@ -37,7 +37,7 @@ export default function tweetMessage(user: User): string {
         // データの状況に応じてメッセージを組み立て
         if (yesterday.level) {
             if (today.level) {
-                // どっちちゃんと情報はいってる
+                // どっちもちゃんと情報はいってる
 
                 // 十九字（ゆかり / 弓使い）
                 // Gain : 151,251,251 exp
@@ -49,14 +49,27 @@ export default function tweetMessage(user: User): string {
 
                 if (user.tweetOnlyActiveDay && diff === 0) {
                     // 差分があったときだけツイートするオプション
+                    // 条件にかかったらスキップ
                     return '';
                 }
 
                 message += `\r\nGain : ${Number(diff).toLocaleString()} exp`;
+
                 if (today.level > yesterday.level) {
+                    // レベルアップしたとき
                     message += `\r\nLevel: ${yesterday.level} -> ${today.level} UP!`;
+
+                    if (today.level === 250) {
+                        message += `\r\nCongratulations!\r\nもう、経験値測定はできません。登録を解除するか、他のキャラクターを設定してください。`;
+                    }
                 } else {
+                    // レベルアップはしてないとき
                     message += `\r\nLevel: ${today.level}`;
+
+                    if (today.level === 250) {
+                        // カンストしたまんまだとツイートをスキップ
+                        return '';
+                    }
                 }
                 message += `\r\nExp% : ${ExpData.percentage(yesterday)}% -> ${ExpData.percentage(today)}%`;
             } else {
