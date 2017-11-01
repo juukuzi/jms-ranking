@@ -22,7 +22,19 @@ revokeRouter.post('/', ensureLoggedIn('/auth/twitter'),
         const user: User = req.user;
 
         try {
+            // ユーザー情報を削除
             await User.revoke(user);
+
+            if (req.session) {
+                // セッションを削除
+                req.session.destroy(err => {
+                    logger.error(err);
+                    res.render('revoke', {
+                        title: 'Revoke',
+                        err: true
+                    });
+                });
+            }
 
             logger.debug('user revoked', user);
 
