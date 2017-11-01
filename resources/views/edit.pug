@@ -8,11 +8,18 @@ block content
     .alert.alert-success(role="alert")
       strong 更新に成功しました。
   else if notFound
-    .alert.alert-worn(role="alert")
+    .alert.alert-worning(role="alert")
       strong 該当のキャラクターがランキングに見つかりませんでした。
       | 入力内容が正しいか確認してください。
       br
       | いまのところ、ランキングにのっていないキャラクターについてはサポートしていません。ごめんなさい。
+  else if countStop
+    .alert.alert-warning(role="alert")
+      strong レベル250達成おめでとうございます！
+      br
+      | でも、このサービスはカンストしたキャラはサポートしていません。
+      br
+      | よかったら、他のサブキャラクターを登録してみてください。
   else if err
     .alert.alert-danger(role="alert")
       strong エラーが発生して更新に失敗しました…。

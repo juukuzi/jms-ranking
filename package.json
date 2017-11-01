@@ -3,9 +3,6 @@
   "version": "1.0.0",
   "description": "get character ranking informations in jms (japan maplestory server).",
   "main": "index.js",
-  "engines": {
-    "node": "8.x"
-  },
   "scripts": {
     "build": "tsc",
     "deploy": "gcloud app deploy  --project jms-ranking-tweet",
