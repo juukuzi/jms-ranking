@@ -28,20 +28,22 @@ revokeRouter.post('/', ensureLoggedIn('/auth/twitter'),
             if (req.session) {
                 // セッションを削除
                 req.session.destroy(err => {
-                    logger.error(err);
-                    res.render('revoke', {
-                        title: 'Revoke',
-                        err: true
-                    });
+                    if (err) {
+                        logger.error(err);
+                        res.render('revoke', {
+                            title: 'Revoke',
+                            err: true
+                        });
+                    } else {
+                        logger.debug('user revoked', user);
+
+                        res.render('revoke', {
+                            title: 'Revoke',
+                            revoked: true
+                        });
+                    }
                 });
             }
-
-            logger.debug('user revoked', user);
-
-            res.render('revoke', {
-                title: 'Revoke',
-                revoked: true
-            });
 
         } catch (err) {
 
