@@ -2,10 +2,10 @@ cron:
 
 - description: scraping rankings
   url: /cron/crawl
-  schedule: every day 07:00
+  schedule: every day 06:30
   timezone: Asia/Tokyo
 
 - description: tweet users
   url: /cron/tweet
-  schedule: every day 09:00
+  schedule: every 1 hours
   timezone: Asia/Tokyo

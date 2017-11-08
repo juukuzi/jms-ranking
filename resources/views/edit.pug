@@ -49,6 +49,14 @@ block content
           else
             option(value= c[0])= c[1]
 
+    .form-group
+      label(for="tweetAt") ツイート時刻
+      select#tweetAt.form-control(name="tweetAt")
+        - var ut = (user && typeof(user.tweetAt) !== 'undefined' ) ? user.tweetAt : 9;
+        - var t = 0;
+          while t < 24
+            option(value= t selected= (t === ut))= `${t++}:00`
+
     .form-check
       label.form-check-label
         input.form-check-input(type="checkbox" name="tweetOnlyActiveDay" checked= user.tweetOnlyActiveDay)

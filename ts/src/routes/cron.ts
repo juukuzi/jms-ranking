@@ -17,12 +17,11 @@ cronRouter.get('/crawl', async (req: Request, res: Response) => {
     if (fromCron) {
         try {
             logger.info('get crawl request');
-            await scraping();
             res.sendStatus(200);
+            await scraping();
 
         } catch (err) {
             logger.error(err);
-            res.sendStatus(500);
         }
 
     } else {
@@ -33,6 +32,13 @@ cronRouter.get('/crawl', async (req: Request, res: Response) => {
 });
 
 
+function matchTime(user: User): boolean {
+    const time: number = new Date().getHours();
+    // 今が指定した時刻か、未設定かつ7時設定であればtrue
+    return (time === user.tweetAt) || (time === 7 && typeof user.tweetAt === 'undefined');
+}
+
+
 // ツイートを行うリクエストに対応
 cronRouter.get('/tweet', async (req: Request, res: Response) => {
 
@@ -40,16 +46,24 @@ cronRouter.get('/tweet', async (req: Request, res: Response) => {
 
     if (fromCron) {
 
+        logger.info('tweet request');
+
         try {
 
             const users: User[] = await User.findAll();
 
             for (const user of users) {
-                const message = tweetMessage(user);
 
-                if (message) {
-                    // 呟きたくないときは空文字列が入っているので、こう
-                    tweet(user, message);
+                if (matchTime(user)) {
+                    const message = tweetMessage(user);
+
+                    if (message) {
+                        // 呟きたくないときは空文字列が入っているので、こう
+                        tweet(user, message);
+
+                    } else {
+                        logger.debug('skip for', user);
+                    }
                 }
             }
 

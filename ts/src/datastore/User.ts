@@ -36,6 +36,9 @@ interface User {
     /** 経験値情報の配列 */
     expData: ExpData[];
 
+    /** 何時につぶやくか。0 ~ 23 */
+    tweetAt?: number;
+
     /** アクティブなときだけつぶやくかどうか設定 */
     tweetOnlyActiveDay?: boolean;
 }
