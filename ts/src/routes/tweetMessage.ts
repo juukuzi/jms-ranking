@@ -9,43 +9,44 @@ import ExpData from '../datastore/ExpData';
  */
 export default function tweetMessage(user: User): string {
 
-    // ワールド名と職業名を取得
-    const world: string = World.name(user.world!);
-    const category: string = Category.map.get(user.category!)!;
+    const weekly = user.interval === "week";
+
+    // 週次設定で、今日が月曜日以外だった場合はスキップ
+    if (weekly && new Date().getDay() !== 1) return '';
 
     // とりあえずキャラ名とかの情報をいれる
-    let message: string = `${user.characterName}（${world} / ${category}）`;
+    let message: string = basicInformation(user);
 
-    if (user.expData.length < 2) {
-        // 情報が2日分ないとき。サービス利用しはじめたところ？
+    // 何日分集計していればツイートできるか。
+    const requiredLength = weekly ? 8 : 2;
 
-        if (user.expData.length === 0) {
-            // まったくない
-            message += '\r\nまだ情報を取得していません。明日まで待ってね！';
-        } else {
-            // 1こだけあった
-            const today = user.expData[0];
-            message += `\r\nデータの取得を開始しました。\r\n現在のレベルは ${today.level} です。\r\n獲得経験値量は翌日以降算出されます。`;
-        }
+    if (user.expData.length < requiredLength) {
+        // 必要な長さまで取得できていなければスキップ
+        return '';
 
     } else {
 
         // 昨晩と一昨晩のデータを確認
-        const today = user.expData[user.expData.length - 1];
-        const yesterday = user.expData[user.expData.length - 2];
+        const current = user.expData[user.expData.length - 1];
+        const previous = user.expData[user.expData.length - requiredLength];
 
         // データの状況に応じてメッセージを組み立て
-        if (yesterday.level) {
-            if (today.level) {
+        if (previous.level) {
+            if (current.level) {
                 // どっちもちゃんと情報はいってる
 
                 // 十九字（ゆかり / 弓使い）
+                // Day  : 11/7
                 // Gain : 151,251,251 exp
                 // Level: 212 -> 213 UP!
                 // Exp% : 12.22% -> 0.22%
                 // #JMSRankingTweet
 
-                const diff = ExpData.diff(yesterday, today);
+                message += weekly ?
+                    `\r\nWeek : ${previous.date.getMonth() + 1}/${previous.date.getDate()} ~` :
+                    `\r\nDay  : ${previous.date.getMonth() + 1}/${previous.date.getDate()}`;
+
+                const diff = ExpData.diff(previous, current);
 
                 if (user.tweetOnlyActiveDay && diff === 0) {
                     // 差分があったときだけツイートするオプション
@@ -55,31 +56,31 @@ export default function tweetMessage(user: User): string {
 
                 message += `\r\nGain : ${Number(diff).toLocaleString()} exp`;
 
-                if (today.level > yesterday.level) {
+                if (current.level > previous.level) {
                     // レベルアップしたとき
-                    message += `\r\nLevel: ${yesterday.level} -> ${today.level} UP!`;
+                    message += `\r\nLevel: ${previous.level} -> ${current.level} UP!`;
 
-                    if (today.level === 250) {
-                        message += `\r\nCongratulations!\r\nもう、経験値測定はできません。登録を解除するか、他のキャラクターを設定してください。`;
+                    if (current.level === 250) {
+                        message += `\r\nCongratulations!\r\nもう、経験値測定はできません。登録を解除するか、他キャラクターを設定してください。`;
                     }
                 } else {
                     // レベルアップはしてないとき
-                    message += `\r\nLevel: ${today.level}`;
-
-                    if (today.level === 250) {
+                    if (current.level === 250) {
                         // カンストしたまんまだとツイートをスキップ
                         return '';
                     }
+
+                    message += `\r\nLevel: ${current.level}`;
                 }
-                message += `\r\nExp% : ${ExpData.percentage(yesterday)}% -> ${ExpData.percentage(today)}%`;
+                message += `\r\nExp% : ${ExpData.percentage(previous)}% -> ${ExpData.percentage(current)}%`;
             } else {
                 // 今日分の情報がない。ランクアウトしたかな？
-                message += '\r\n昨晩の情報取得に失敗しました。ランクアウト？';
+                message += '\r\n今回の情報取得に失敗しています。ランクアウト？\r\n\r\n（前回時点の情報）\r\n' + pointDataInformation(previous);
             }
         } else {
-            if (today.level) {
+            if (current.level) {
                 // ランクインしたかな？
-                message += '\r\n一昨晩の情報がありません。ランクイン？';
+                message += '\r\n前回分の情報取得に失敗しています。ランクイン？\r\n\r\n（今回取得した情報）\r\n' + pointDataInformation(current);
             } else {
                 // どっちもない。
                 message += '\r\n情報の取得に失敗しています。設定がおかしいか、ランクインしていません。';
@@ -90,4 +91,17 @@ export default function tweetMessage(user: User): string {
     message += '\r\n#JMSRankingTweet';
 
     return message;
+}
+
+
+function basicInformation(user: User): string {
+    // ワールド名と職業名を取得
+    const world: string = World.name(user.world!);
+    const category: string = Category.map.get(user.category!)!;
+
+    return `${user.characterName}（${world} / ${category}）`;
+}
+
+function pointDataInformation(data: ExpData): string {
+    return `Level:${data.level}\r\nExp% :${ExpData.percentage(data)}%`
 }

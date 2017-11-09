@@ -46,7 +46,7 @@ cronRouter.get('/tweet', async (req: Request, res: Response) => {
 
     if (fromCron) {
 
-        logger.info('tweet request');
+        logger.info('tweet request at ' + new Date().getHours());
 
         try {
 

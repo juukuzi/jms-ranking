@@ -39,6 +39,9 @@ interface User {
     /** 何時につぶやくか。0 ~ 23 */
     tweetAt?: number;
 
+    /** 日次 or 週次 */
+    interval?: "day" | "week";
+
     /** アクティブなときだけつぶやくかどうか設定 */
     tweetOnlyActiveDay?: boolean;
 }
