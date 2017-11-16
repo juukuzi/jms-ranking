@@ -41,7 +41,7 @@ const edit = Router();
 
 // 画面表示時
 edit.get('/',
-    // ensureLoggedIn('/auth/twitter'),
+    ensureLoggedIn('/auth/twitter'),
     (req: Request, res: Response) => {
 
         res.render('edit', {

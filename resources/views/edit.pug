@@ -73,14 +73,15 @@ block content
     - if (!user.threshold) user.threshold = {};
     .form-row
       .form-group.col-8
-        input#thresholdValue.form-control.threshold(type="number" name="thresholdValue" value= user.threshold.value ? user.threshold.value : 1)
+        input#thresholdValue.form-control.threshold(type="number" name="thresholdValue" value= user.threshold.value ? user.threshold.value : 1 disabled= !user.tweetOnlyActiveDay)
       .form-group.col
-        select#thresholdOrder.form-control.threshold(name="thresholdOrder")
+        select#thresholdOrder.form-control.threshold(name="thresholdOrder" disabled= !user.tweetOnlyActiveDay)
           each symbol, index in ['k', 'm', 'g']
             -var order = Math.pow(1000, (index + 1))
               option(value= order selected= user.threshold.order === order)= symbol
 
-    button.btn.btn-primary.btn-lg.btn-block.my-4(type="submit") 更新
+    button#submit.btn.btn-primary.btn-lg.btn-block.my-4(type="submit") 更新
 
+  script(src="https://cdn.jsdelivr.net/npm/gasparesganga-jquery-loading-overlay@1.5.4/src/loadingoverlay.min.js")
   script
     include ./includes/edit.js
