@@ -65,10 +65,20 @@ block content
         input#intervalWeek.form-ckeck-input(type="radio" name="interval" value="week" checked= user.interval === "week")
         | 週１（月曜日）
 
-    .form-check.my-4
+    .form-check.mt-4
       label.form-check-label
-        input.form-check-input(type="checkbox" name="tweetOnlyActiveDay" checked= user.tweetOnlyActiveDay)
-        | 経験値変動があるときだけツイートする
+        input#tweetOnlyActiveDay.form-check-input(type="checkbox" name="tweetOnlyActiveDay" checked= user.tweetOnlyActiveDay)
+        | 一定以上の経験値を獲得した時だけツイートする
+
+    - if (!user.threshold) user.threshold = {};
+    .form-row
+      .form-group.col-8
+        input#thresholdValue.form-control.threshold(type="number" name="thresholdValue" value= user.threshold.value ? user.threshold.value : 1)
+      .form-group.col
+        select#thresholdOrder.form-control.threshold(name="thresholdOrder")
+          each symbol, index in ['k', 'm', 'g']
+            -var order = Math.pow(1000, (index + 1))
+              option(value= order selected= user.threshold.order === order)= symbol
 
     button.btn.btn-primary.btn-lg.btn-block.my-4(type="submit") 更新
 

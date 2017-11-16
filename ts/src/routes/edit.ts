@@ -12,7 +12,7 @@ interface WorldNames {
     [index: string]: string;
 }
 
-interface Params {
+interface ViewParams {
     title: string;
     world: [string, World][];
     worldName: WorldNames;
@@ -23,10 +23,7 @@ interface Params {
     countStop?: boolean;
     err?: Error;
 }
-
-const edit = Router();
-
-const params: Params = {
+const params: ViewParams = {
     title: 'Edit',
     world: [...World.map.entries()],
     worldName: {
@@ -38,8 +35,13 @@ const params: Params = {
     category: [...Category.map.entries()]
 };
 
+
+const edit = Router();
+
+
+// 画面表示時
 edit.get('/',
-    ensureLoggedIn('/auth/twitter'),
+    // ensureLoggedIn('/auth/twitter'),
     (req: Request, res: Response) => {
 
         res.render('edit', {
@@ -50,17 +52,16 @@ edit.get('/',
     }
 );
 
+
+//
 edit.post('/',
     ensureLoggedIn('/auth/twitter'),
     async (req: Request, res: Response) => {
 
-        // POSTパラメーターの取得
+        // POSTパラメーターから情報を取得
         const category = req.body.category;
         const world = req.body.world;
         const characterName = req.body.characterName;
-        const tweetAt = parseInt(req.body.tweetAt);
-        const interval = req.body.interval;
-        const tweetOnlyActiveDay = req.body.tweetOnlyActiveDay;
 
         // ログイン中のユーザー情報を取得
         const user: User = req.user;
@@ -69,16 +70,9 @@ edit.post('/',
 
             if (req.query.force === 'true') {
                 // ランキングにのっているかどうかに関わらず強制登録するとき。
-                user.category = category;
-                user.world = world;
-                user.characterName = characterName;
-                user.tweetAt = tweetAt;
-                user.interval = interval;
-                user.tweetOnlyActiveDay = tweetOnlyActiveDay;
+                mergeParamsToUser(user, req.body);
                 user.disabled = false;
-                User.pushExpData(user, {
-                    date: new Date()
-                });
+                User.pushExpData(user, { date: new Date() });
 
                 await User.update(user);
 
@@ -110,12 +104,7 @@ edit.post('/',
                     } else {
                         // いちばん正常系
                         // ユーザー情報の必要な部分を書き換える。
-                        user.category = category;
-                        user.world = world;
-                        user.characterName = characterName;
-                        user.tweetAt = tweetAt;
-                        user.interval = interval;
-                        user.tweetOnlyActiveDay = tweetOnlyActiveDay;
+                        mergeParamsToUser(user, req.body);
                         user.disabled = false;
 
                         if (user.expData.length === 0) {
@@ -175,6 +164,19 @@ async function check(world: string, category: string, characterName: string): Pr
 
 }
 
+
+function mergeParamsToUser(user: User, body: any): void {
+    user.category = body.category;
+    user.world = body.world;
+    user.characterName = body.characterName;
+    user.tweetAt = parseInt(body.tweetAt);
+    user.interval = body.interval;
+    user.tweetOnlyActiveDay = body.tweetOnlyActiveDay;
+    user.threshold = {
+        value: parseInt(body.thresholdValue),
+        order: parseInt(body.thresholdOrder)
+    };
+}
 
 
 export default edit;

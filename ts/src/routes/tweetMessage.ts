@@ -9,12 +9,13 @@ import ExpData from '../datastore/ExpData';
  */
 export default function tweetMessage(user: User): string {
 
+    // 週次設定になっているかどうか？
     const weekly = user.interval === "week";
 
     // 週次設定で、今日が月曜日以外だった場合はスキップ
     if (weekly && new Date().getDay() !== 1) return '';
 
-    // とりあえずキャラ名とかの情報をいれる
+    // 最終的につぶやかれるメッセージ。とりあえずキャラ名とかの情報をいれる
     let message: string = basicInformation(user);
 
     // 何日分集計していればツイートできるか。
@@ -42,18 +43,21 @@ export default function tweetMessage(user: User): string {
                 // Exp% : 12.22% -> 0.22%
                 // #JMSRankingTweet
 
+                //
                 message += weekly ?
-                    `\r\nWeek : ${previous.date.getMonth() + 1}/${previous.date.getDate()} ~` :
+                    `\r\nWeek : ${previous.date.getMonth() + 1}/${previous.date.getDate()}` :
                     `\r\nDay  : ${previous.date.getMonth() + 1}/${previous.date.getDate()}`;
 
+                // 増加量を算出
                 const diff = ExpData.diff(previous, current);
 
-                if (user.tweetOnlyActiveDay && diff === 0) {
+                if (inactive(user, diff)) {
                     // 差分があったときだけツイートするオプション
                     // 条件にかかったらスキップ
                     return '';
                 }
 
+                // 増加量メッセージ
                 message += `\r\nGain : ${Number(diff).toLocaleString()} exp`;
 
                 if (current.level > previous.level) {
@@ -104,4 +108,27 @@ function basicInformation(user: User): string {
 
 function pointDataInformation(data: ExpData): string {
     return `Level:${data.level}\r\nExp% :${ExpData.percentage(data)}%`
+}
+
+/**
+ * @param user 調べる対象のユーザー
+ * @param diff 計算した経験値増加量
+ * @returns 閾値に達しておらず、ツイートしないときは `true`
+ */
+function inactive(user: User, diff: number): boolean {
+    if (user.tweetOnlyActiveDay) {
+        // アクティブな時だけツイートする設定が有効
+        let threshold;
+        if (user.threshold) {
+            // 閾値設定がされているとき
+            threshold = (user.threshold.value * user.threshold.order);
+        } else {
+            // されていなかったら１
+            threshold = 1;
+        }
+        return diff < threshold;
+    } else {
+        // 設定されてなかったら問題なし
+        return false;
+    }
 }

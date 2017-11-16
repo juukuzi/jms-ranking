@@ -44,6 +44,12 @@ interface User {
 
     /** アクティブなときだけつぶやくかどうか設定 */
     tweetOnlyActiveDay?: boolean;
+
+    /** しきい値設定 */
+    threshold?: {
+        value: number;
+        order: number;
+    };
 }
 
 
@@ -174,6 +180,7 @@ namespace User {
 
     }
 
+    /** 経験値データを追加します。設定されている長さ以上になっていたら古い分から消します。 */
     export function pushExpData(user: User, expData: ExpData): void {
         user.expData.push(expData);
         while (user.expData.length >= config.daysToKeepExpData) {
