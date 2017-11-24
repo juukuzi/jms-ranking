@@ -70,7 +70,7 @@ block content
         input#tweetOnlyActiveDay.form-check-input(type="checkbox" name="tweetOnlyActiveDay" checked= user.tweetOnlyActiveDay)
         | 一定以上の経験値を獲得した時だけツイートする
 
-    - if (!user.threshold) user.threshold = {};
+    - if (!user.threshold) user.threshold = {}
     .form-row
       .form-group.col-8
         input#thresholdValue.form-control.threshold(type="number" name="thresholdValue" value= user.threshold.value ? user.threshold.value : 1 disabled= !user.tweetOnlyActiveDay)
