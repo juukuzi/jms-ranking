@@ -60,6 +60,8 @@ export default async function scraping(): Promise<void> {
         }
 
         if (!suitable(ranking, user)) {
+            // ひとやすみ
+            await sleep(10000);
             // ランキングがちがったら取得しなおす
             ranking = await rankingFor(user);
         }
@@ -85,4 +87,8 @@ export default async function scraping(): Promise<void> {
         await User.update(user);
     }
 
+}
+
+async function sleep(time: number): Promise<void> {
+    return new Promise<void>(resolve => setTimeout(resolve, time));
 }
