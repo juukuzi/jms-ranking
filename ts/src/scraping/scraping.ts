@@ -9,6 +9,7 @@ import logger from '../logger';
  * 指定されたユーザーのキャラクターを含むランキングリストを取得してきます。
  */
 async function rankingFor(user: User): Promise<RankingList> {
+    logger.debug(`world: ${user.world}, category: ${user.category}`);
     return requestRanking(
         World.map.get(user.world!)!,
         Category.map.get(user.category!)!
@@ -63,7 +64,12 @@ export default async function scraping(): Promise<void> {
             // ひとやすみ
             await sleep(10000);
             // ランキングがちがったら取得しなおす
-            ranking = await rankingFor(user);
+            try {
+                ranking = await rankingFor(user);
+            } catch (err) {
+                logger.error('cannot get ranking data.', err);
+                continue;
+            }
         }
 
         // ランキングリストからそのユーザーのキャラクターを探す

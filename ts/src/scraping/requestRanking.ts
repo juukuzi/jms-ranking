@@ -4,15 +4,18 @@ import PlayerCharacterData from './PlayerCharacterData';
 import World from './World';
 import Category from './Category';
 import RankingList from './RankingList';
+import config from '../config';
+
 
 /**
  * Hangameのランキングページにアクセスして、html文字列をもらってきます。
  *
  * @param world サーバーのやつ
  * @param category 職業とかのやつ
+ * @param retryCount エラー時のリトライ数カウント
  * @returns HTML文字列とってくるPromise
  */
-function fetchHTML(world: World, category: Category): Promise<string> {
+function fetchHTML(world: World, category: Category, retryCount: number = 0): Promise<string> {
 
     // あんまりこのURLをソースに埋め込むのはよくない気もするけれど
     // どうせURLが変わるようなことがあったら他の仕様もかわって使えなくなるしOK
@@ -22,6 +25,7 @@ function fetchHTML(world: World, category: Category): Promise<string> {
         const options: request.Options = {
             uri: RANKING_PAGE,
             headers: {
+                'User-Agent': 'JMSRankingTweetBot (https://jms-ranking-tweet.appspot.com)',
                 'Content-Type': 'application/x-www-form-urlencoded'
             },
             form: {
@@ -31,7 +35,14 @@ function fetchHTML(world: World, category: Category): Promise<string> {
         };
         request.post(options, (error, response, body) => {
             if (error) {
-                reject(error);
+                if (retryCount === config.maxRetry) {
+                    reject(new Error(''));
+                } else {
+                    setTimeout(() =>
+                        fetchHTML(world, category, retryCount + 1)
+                            .then(resolve, reject)
+                    , 20000);
+                }
             } else {
                 resolve(body);
             }

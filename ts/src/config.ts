@@ -9,6 +9,8 @@ interface Config {
 
     daysToKeepExpData: number;
 
+    maxRetry: number;
+
 }
 
 const config: Config = require('../../resources/config.json');
