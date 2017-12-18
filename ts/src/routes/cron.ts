@@ -44,38 +44,57 @@ cronRouter.get('/tweet', async (req: Request, res: Response) => {
 
     const fromCron = req.get('X-Appengine-Cron') === 'true';
 
-    if (fromCron) {
+    if (!fromCron) {
+        // なんか外部からリクエストが飛んできたとき
+        res.sendStatus(403);
+        return;
+    }
 
-        logger.info('tweet request at ' + new Date().getHours());
+    // 正常なリクエスト時
+    logger.info('tweet request at ' + new Date().getHours());
 
-        try {
+    try {
 
-            const users: User[] = await User.findAll();
+        // 全ユーザーを取得
+        const users: User[] = await User.findAll();
 
-            for (const user of users) {
+        for (const user of users) {
 
-                if (matchTime(user)) {
-                    const message = tweetMessage(user);
+            // この時間にツイートしてほしい人以外はスキップするよ。
+            if (!matchTime(user)) continue;
 
-                    if (message) {
-                        // 呟きたくないときは空文字列が入っているので、こう
-                        tweet(user, message);
+            const message = tweetMessage(user);
 
-                    } else {
-                        logger.debug('skip for', user);
+            if (message) {
+                // 呟くことがあるとき
+                try {
+                    // Twitterに送信
+                    await tweet(user, message);
+
+                } catch (err) {
+                    // ツイート送信時に何らかのエラーが発生したとき
+                    logger.error(err);
+
+                    if (err.message.match('Invalid or expired token')) {
+                        // なんかトークンの有効期限切れだったとき
+                        // 多分アプリケーション認証を無効化しているので、こちらからもツイート停止
+                        logger.info(`to disable user @${user.userName}`);
+                        user.disabled = true;
+                        await User.update(user);
                     }
                 }
+
+            } else {
+                logger.debug('skip for', user.characterName);
             }
 
-            res.sendStatus(200);
-
-        } catch (err) {
-            logger.error(err);
-            res.sendStatus(500);
         }
 
-    } else {
-        res.sendStatus(403);
+        res.sendStatus(200);
+
+    } catch (err) {
+        logger.error(err);
+        res.sendStatus(500);
     }
 
 });

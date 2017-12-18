@@ -1,5 +1,4 @@
 import * as Twit from 'twit';
-import logger from "./logger";
 import User from "./datastore/User";
 import config from './config';
 
@@ -11,7 +10,7 @@ import config from './config';
  * @param user ツイートするユーザー
  * @param message ツイートする文字列
  */
-export default function tweet(user: User, message: string): void {
+export default function tweet(user: User, message: string): Promise<Twit.Response> {
 
     const twit = new Twit({
         consumer_key: config.twitter.consumerKey,
@@ -20,13 +19,14 @@ export default function tweet(user: User, message: string): void {
         access_token_secret: user.tokenSecret
     });
 
-    twit.post(
-        'statuses/update',
-        { status: message },
-        (err, data) => {
-            if (err) logger.error('twit err.', err);
-            else logger.debug('twit data.', data);
-        }
-    );
-
+    return new Promise<Twit.Response>((resolve, reject) => {
+        twit.post(
+            'statuses/update',
+            {status: message},
+            (err, data) => {
+                if (err) reject(err);
+                else resolve(data);
+            }
+        );
+    });
 }
