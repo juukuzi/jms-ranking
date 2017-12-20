@@ -33,7 +33,7 @@ enum Category {
     DEMON_AVENGER = 'デーモンアヴェンジャー',
     XENON = 'ゼノン',
     KAISER = 'カイザー',
-    // CADENA = 'カデナ',
+    CADENA = 'カデナ',
     ANGELIC_BUSTER = 'エンジェリックバスター',
     HAYATO = 'ハヤト',
     KANNA = 'カンナ',
