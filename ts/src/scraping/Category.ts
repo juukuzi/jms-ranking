@@ -40,7 +40,7 @@ enum Category {
     ZERO = 'ゼロ',
     BEAST_TAMER = 'ビーストテイマー',
     KINESIS = 'キネシス',
-    // ILLIUM = 'イリウム'
+    ILLIUM = 'イリウム',
 }
 
 

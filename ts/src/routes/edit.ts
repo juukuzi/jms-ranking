@@ -104,6 +104,13 @@ edit.post('/',
 
                     } else {
                         // いちばん正常系
+
+                        if (user.expData.length > 0 && user.characterName !== req.body.characterName) {
+                            // キャラクター変更時
+                            // 前のキャラの経験値データが残ってると変な動作になるので、消去
+                            user.expData = [];
+                        }
+
                         // ユーザー情報の必要な部分を書き換える。
                         mergeParamsToUser(user, req.body);
                         user.disabled = false;
@@ -119,6 +126,7 @@ edit.post('/',
                             const categoryName: string = Category.map.get(user.category!)!;
                             // 情報更新したよツイート
                             await tweet(user, `キャラクター情報を登録しました。\r\n${user.characterName}（${worldName} / ${categoryName}）\r\n現在のレベルは ${data.level} です。\r\n#JMSRankingTweet`);
+                        
                         }
 
                         // Datastoreに上書き保存。
