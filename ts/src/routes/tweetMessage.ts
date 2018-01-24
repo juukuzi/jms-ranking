@@ -87,7 +87,8 @@ export default function tweetMessage(user: User): string {
                 message += '\r\n前回分の情報取得に失敗しています。ランクイン？\r\n\r\n（今回取得した情報）\r\n' + pointDataInformation(current);
             } else {
                 // どっちもない。
-                message += '\r\n情報の取得に失敗しています。設定がおかしいか、ランクインしていません。';
+                // message += '\r\n情報の取得に失敗しています。設定がおかしいか、ランクインしていません。';
+                return '';
             }
         }
     }
