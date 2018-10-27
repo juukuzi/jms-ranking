@@ -41,6 +41,7 @@ enum Category {
     BEAST_TAMER = 'ビーストテイマー',
     KINESIS = 'キネシス',
     ILLIUM = 'イリウム',
+    ARK = 'アーク',
 }
 
 
