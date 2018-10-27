@@ -1,6 +1,6 @@
 declare module '@google-cloud/connect-datastore' {
     import * as session from 'express-session';
-    import * as Datastore from '@google-cloud/datastore';
+    import Datastore = require('@google-cloud/datastore');
     type sessionType = typeof session;
     class DatastoreStore extends session.Store{
     }

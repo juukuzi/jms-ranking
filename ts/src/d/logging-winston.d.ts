@@ -1,5 +1,4 @@
 declare module '@google-cloud/logging-winston' {
-    import { TransportInstance } from 'winston';
-    const m: TransportInstance;
-    export = m;
+    import * as Transport from 'winston-transport';
+    export class LoggingWinston extends Transport {}
 }

@@ -1,7 +1,7 @@
 import * as winston from 'winston';
-import LoggingWinston = require('@google-cloud/logging-winston');
+import { LoggingWinston } from '@google-cloud/logging-winston';
 
-const logger = new winston.Logger({
+const logger = winston.createLogger({
     level: 'debug',
     transports: [
         new winston.transports.Console(),
