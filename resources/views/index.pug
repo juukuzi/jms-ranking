@@ -19,6 +19,10 @@ block content
 
         a.card-link(href="/edit") 設定
         a.card-link(href="/revoke") 解除
+        br
+
+        .row(style="position: relative;")
+          canvas#graph.col(width="400" height="200")
 
       else
         p.card-text ログインしていません。
@@ -32,3 +36,9 @@ block content
   .changelog.card
 
     include ./includes/changelog
+
+
+  script.
+      var expDataList = !{JSON.stringify(user.expData.slice(Math.max(user.expData.length - 7, 0)))};
+
+  script(src="/scripts/graph.js")

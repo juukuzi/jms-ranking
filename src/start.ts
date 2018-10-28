@@ -1,6 +1,6 @@
 import * as sourceMapSupport from 'source-map-support';
-import setupApplication from './src/setup';
-import logger from './src/logger';
+import setupApplication from './main/setup';
+import logger from './main/logger';
 
 // タイムゾーンを日本にしておくよ
 process.env.TZ = 'Asia/Tokyo';

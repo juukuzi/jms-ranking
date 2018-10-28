@@ -1,6 +1,6 @@
 import { expect } from 'chai';
 import 'mocha';
-import ExpData from "../src/datastore/ExpData";
+import ExpData from '../main/datastore/ExpData';
 
 describe('ExpData', () => {
 
