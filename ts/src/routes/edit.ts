@@ -183,6 +183,7 @@ function mergeParamsToUser(user: User, body: any): void {
     user.category = body.category;
     user.world = body.world;
     user.characterName = body.characterName;
+    user.tweetBy = body.tweetBy;
     user.tweetAt = parseInt(body.tweetAt);
     user.interval = body.interval;
     user.tweetOnlyActiveDay = body.tweetOnlyActiveDay;
