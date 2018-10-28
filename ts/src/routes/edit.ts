@@ -124,9 +124,14 @@ edit.post('/',
                             });
                             const worldName: string = World.name(user.world!);
                             const categoryName: string = Category.map.get(user.category!)!;
+
+                            // Botツイートが選択されていたら、Botからユーザーのアカウントにメンションを飛ばす。
+                            const bot = user.tweetBy === 'botMention';
+                            const menthion = bot ? `@${user.userName}\r\n` : '';
+                            const account = bot ? tweet.BOT : user;
+
                             // 情報更新したよツイート
-                            await tweet(user, `キャラクター情報を登録しました。\r\n${user.characterName}（${worldName} / ${categoryName}）\r\n現在のレベルは ${data.level} です。\r\n#JMSRankingTweet`);
-                        
+                            await tweet(account, `${menthion}キャラクター情報を登録しました。\r\n${user.characterName}（${worldName} / ${categoryName}）\r\n現在のレベルは ${data.level} です。\r\n#JMSRankingTweet`);
                         }
 
                         // Datastoreに上書き保存。

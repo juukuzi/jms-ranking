@@ -5,6 +5,11 @@ interface Config {
         consumerSecret: string;
     };
 
+    bot: {
+        token: string;
+        tokenSecret: string;
+    };
+
     sessionKey: string;
 
     daysToKeepExpData: number;
@@ -13,6 +18,6 @@ interface Config {
 
 }
 
-const config: Config = require('../../resources/config.json');
+const config: Config = require('../../resources/config.json') as Config;
 
 export default config;

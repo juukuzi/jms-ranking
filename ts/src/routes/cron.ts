@@ -66,10 +66,15 @@ cronRouter.get('/tweet', async (req: Request, res: Response) => {
             const message = tweetMessage(user);
 
             if (message) {
-                // 呟くことがあるとき
+                // 呟くことがあるとき Twitterに送信
                 try {
-                    // Twitterに送信
-                    await tweet(user, message);
+                    if (user.tweetBy === 'botMention') {
+                        // Botからのメンション選択時
+                        await tweet(tweet.BOT, `@${user.userName}\r\n${message}`);
+                    } else {
+                        // 自分のアカウント
+                        await tweet(user, message);
+                    }
 
                 } catch (err) {
                     // ツイート送信時に何らかのエラーが発生したとき

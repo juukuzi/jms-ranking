@@ -51,6 +51,15 @@ block content
             option(value= c[0])= c[1]
 
     .form-group
+      div ツイート方法
+        label.form-check-label
+          input.form-check-input(type="radio" name="tweetBy" value="selfAccount" checked= user.tweetBy !== "botMention")
+          | 自分のアカウント
+        label.form-check-label
+          input.form-check-input(type="radio" name="tweetBy" value="botMention" checked= user.tweetBy === "botMention")
+          | Botメンション
+
+    .form-group
       label(for="tweetAt") ツイート時刻
       select#tweetAt.form-control(name="tweetAt")
         - var ut = (user && typeof(user.tweetAt) !== 'undefined' ) ? user.tweetAt : 9;

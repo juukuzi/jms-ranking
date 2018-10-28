@@ -10,7 +10,7 @@ import config from './config';
  * @param user ツイートするユーザー
  * @param message ツイートする文字列
  */
-export default function tweet(user: User, message: string): Promise<Twit.Response> {
+function tweet(user: User, message: string): Promise<Twit.Response> {
 
     const twit = new Twit({
         consumer_key: config.twitter.consumerKey,
@@ -30,3 +30,16 @@ export default function tweet(user: User, message: string): Promise<Twit.Respons
         );
     });
 }
+
+namespace tweet {
+    export const BOT: User = {
+        id: "0",
+        userName: "JMSExpTweetBot",
+        disabled: false,
+        expData: [],
+        token: config.bot.token,
+        tokenSecret: config.bot.tokenSecret,
+    };
+}
+
+export default tweet;
