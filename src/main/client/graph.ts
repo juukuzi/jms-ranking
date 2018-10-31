@@ -5,6 +5,9 @@ import ExpData from '../datastore/ExpData';
 declare const expDataList: ExpData[];
 
 document.addEventListener('DOMContentLoaded', () => {
+
+    if (!expDataList) return;
+
     const canvas = document.getElementById('graph') as HTMLCanvasElement;
     const context = canvas.getContext('2d') as CanvasRenderingContext2D;
 

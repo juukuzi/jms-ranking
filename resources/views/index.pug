@@ -37,8 +37,7 @@ block content
 
     include ./includes/changelog
 
-
-  script.
+  if user && user.expData
+    script.
       var expDataList = !{JSON.stringify(user.expData.slice(Math.max(user.expData.length - 7, 0)))};
-
-  script(src="/scripts/graph.js")
+    script(src="/scripts/graph.js")
