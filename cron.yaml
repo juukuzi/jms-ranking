@@ -4,6 +4,9 @@ cron:
   url: /cron/crawl
   schedule: every day 06:30
   timezone: Asia/Tokyo
+  retry_parameters:
+    min_backoff_seconds: 300
+    max_doublings: 5
 
 - description: tweet users
   url: /cron/tweet

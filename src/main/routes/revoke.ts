@@ -35,7 +35,7 @@ revokeRouter.post('/', ensureLoggedIn('/auth/twitter'),
                             err: true
                         });
                     } else {
-                        logger.debug('user revoked', user);
+                        logger.debug(`revoked: ${user.id}`);
 
                         res.render('revoke', {
                             title: 'Revoke',

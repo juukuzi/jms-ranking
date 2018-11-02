@@ -17,18 +17,15 @@ cronRouter.get('/crawl', async (req: Request, res: Response) => {
     if (fromCron) {
         try {
             logger.info('get crawl request');
-            res.sendStatus(200);
             await scraping();
-
+            res.sendStatus(200);
         } catch (err) {
             logger.error(err);
         }
-
     } else {
         // なんかサービス外からクローリングリクエストが来たとき
         res.sendStatus(403);
     }
-
 });
 
 
