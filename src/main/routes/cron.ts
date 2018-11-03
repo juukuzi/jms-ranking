@@ -19,8 +19,10 @@ cronRouter.get('/crawl', async (req: Request, res: Response) => {
             logger.info('get crawl request');
             await scraping();
             res.sendStatus(200);
+            logger.info('crawl complete!');
         } catch (err) {
             logger.error(err);
+            res.status(500);
         }
     } else {
         // なんかサービス外からクローリングリクエストが来たとき
@@ -40,7 +42,6 @@ function matchTime(user: User): boolean {
 cronRouter.get('/tweet', async (req: Request, res: Response) => {
 
     const fromCron = req.get('X-Appengine-Cron') === 'true';
-
     if (!fromCron) {
         // なんか外部からリクエストが飛んできたとき
         res.sendStatus(403);
