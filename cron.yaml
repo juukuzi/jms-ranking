@@ -5,8 +5,10 @@ cron:
   schedule: every day 06:30
   timezone: Asia/Tokyo
   retry_parameters:
-    min_backoff_seconds: 300
+    min_backoff_seconds: 60
+    max_backoff_seconds: 1800
     max_doublings: 5
+    job_age_limit: 1d
 
 - description: tweet users
   url: /cron/tweet
