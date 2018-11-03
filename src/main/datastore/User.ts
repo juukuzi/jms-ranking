@@ -74,25 +74,11 @@ namespace User {
      * @returns 見つかったらUser なかったらエラー
      */
     export async function findById(id: string): Promise<User | undefined> {
-
         const key = datastore.key(['User', id]);
-
         const result = await datastore.get(key);
-
         const user = result[0];
-
-        if (isUser(user)) {
-            return user;
-
-        } else if(user === void 0) {
-            return undefined;
-
-        } else {
-            throw { message: 'user format is wrong', user };
-
-        }
+        return isUser(user) ? user : undefined;
     }
-
 
     /**
      * @param id TwitterのID値（数字）の文字列
@@ -102,7 +88,6 @@ namespace User {
      * @returns 既に登録してある場合はそのUserを取得、なかったら新しく作成したUser
      */
     export async function signUp(id: string, userName: string, token: string, tokenSecret: string): Promise<User> {
-
         // idをkye値に使うよ
         const key = datastore.key(['User', id]);
 
@@ -117,7 +102,7 @@ namespace User {
                 ...entity,
                 userName,
                 token,
-                tokenSecret
+                tokenSecret,
             };
         } else {
             // なかったときは新しく作成
@@ -127,7 +112,7 @@ namespace User {
                 token,
                 tokenSecret,
                 disabled: true,
-                expData: []
+                expData: [],
             };
         }
 
@@ -138,7 +123,6 @@ namespace User {
         });
 
         return user;
-
     }
 
 
@@ -147,40 +131,24 @@ namespace User {
      * @returns 終わったときよう
      */
     export async function update(user: User): Promise<void> {
-
         const key = datastore.key(['User', user.id]);
-
         await datastore.update({
             key,
             data: user
         });
-
     }
-
 
     /**
      * Datastoreに保存されている有効な全ユーザーを取得してきます。
      * @returns Datastoreに保存されているユーザー取ってくるやつ
      */
     export async function findAll(): Promise<User[]> {
-
         const query = datastore.createQuery('User')
             .filter('disabled', '=', false)
             .order('world')
             .order('category');
-
         const result = await datastore.runQuery(query);
-        const entities = result[0];
-
-        const users: User[] = [];
-
-        entities.forEach(entity => {
-            if (isUser(entity)) users.push(entity);
-            else logger.warn('found strange user entity', entity);
-        });
-
-        return users;
-
+        return result[0].filter(isUser);
     }
 
     /** 経験値データを追加します。設定されている長さ以上になっていたら古い分から消します。 */
