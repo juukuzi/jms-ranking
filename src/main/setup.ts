@@ -93,6 +93,7 @@ export default function setup(): Application {
     });
     // error handler
     app.use((err: SError, req: Request, res: Response) => {
+        logger.error(err);
         res.locals.message = err.message;
         res.locals.error = req.app.get('env') === 'development' ? err : {};
         res.status(err.status || 500);

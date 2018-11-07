@@ -52,5 +52,4 @@ namespace ExpData {
 
 }
 
-
 export default ExpData;

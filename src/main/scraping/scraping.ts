@@ -19,7 +19,7 @@ async function rankingFor(user: User): Promise<RankingList> {
 /**
  * ユーザーとランキングが一致してるか
  */
-function suitable(ranking: RankingList, user: User): boolean {
+function matchTable(ranking: RankingList, user: User): boolean {
     return ranking.categoryKey === user.category &&
         ranking.worldKey === user.world;
 }
@@ -46,12 +46,16 @@ export default async function scraping(): Promise<void> {
     // だれも登録されていないとき：おやすみ
     if (users.length === 0) { logger.warn('no user.'); return; }
 
-    // とりあえず最初のユーザーの分のランキングを取得
-    let ranking = await rankingFor(users[0]);
+    // 初回はダミーを用意
+    let ranking: RankingList = {
+        date: new Date(),
+        worldKey: '',
+        categoryKey: '',
+        characters: [],
+    };
 
     // 各ユーザーに対して
     for (const user of users) {
-
         // このユーザーが今日分のデーターをもう取得していたらスキップするよ。
         // 新規登録したユーザーだとありうるよ。
         const last = user.expData[user.expData.length - 1];
@@ -60,12 +64,11 @@ export default async function scraping(): Promise<void> {
             continue;
         }
 
-        if (!suitable(ranking, user)) {
-            // ひとやすみ
-            await sleep(10000);
+        if (!matchTable(ranking, user)) {
             // ランキングがちがったら取得しなおす
             try {
                 ranking = await rankingFor(user);
+                await sleep(10000);
             } catch (err) {
                 logger.error('cannot get ranking data.', err);
                 continue;
