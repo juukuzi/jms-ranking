@@ -1,4 +1,4 @@
-import Datastore = require('@google-cloud/datastore');
+const { Datastore } = require('@google-cloud/datastore');
 
 const datastore = new Datastore({
     projectId: 'jms-ranking-tweet'
