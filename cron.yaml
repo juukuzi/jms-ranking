@@ -2,13 +2,10 @@ cron:
 
 - description: scraping rankings
   url: /cron/crawl
-  schedule: every 5 minutes from 06:10 to 8:00
+  schedule: every 5 minutes from 06:01 to 8:00
   timezone: Asia/Tokyo
-  retry_parameters:
-    min_backoff_seconds: 60
-    job_age_limit: 5m
 
-#- description: tweet users
-#  url: /cron/tweet
-#  schedule: every 1 hours synchronized
-#  timezone: Asia/Tokyo
+- description: tweet users
+  url: /cron/tweet
+  schedule: every 1 hours synchronized
+  timezone: Asia/Tokyo

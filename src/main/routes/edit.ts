@@ -94,8 +94,8 @@ edit.post('/',
                 if (data) {
                     // ランキングにのっていたとき
 
-                    if (data.level === 250) {
-                        // レベル250のとき
+                    if (data.level === 275) {
+                        // レベル275のとき
                         res.render('edit', {
                             ...params,
                             user,

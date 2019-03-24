@@ -89,7 +89,7 @@ cronRouter.get('/tweet', async (req: Request, res: Response) => {
 
             } else {
                 // 呟くことがなければスキップ
-                // logger.debug(`skip for ${user.characterName}`);
+                logger.debug(`skip for ${user.characterName}`);
             }
 
         }

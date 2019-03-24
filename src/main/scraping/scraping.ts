@@ -17,14 +17,6 @@ async function rankingFor(user: User): Promise<RankingList> {
 }
 
 /**
- * ユーザーとランキングが一致してるか
- */
-function matchTable(ranking: RankingList, user: User): boolean {
-    return ranking.categoryKey === user.category &&
-        ranking.worldKey === user.world;
-}
-
-/**
  * 同じ日かどうか
  */
 function sameDate(date1: Date, date2: Date): boolean {
@@ -46,34 +38,18 @@ export default async function scraping(): Promise<void> {
     // だれも登録されていないとき：おやすみ
     if (users.length === 0) { logger.warn('no user.'); return; }
 
-    // 初回はダミーを用意
-    let ranking: RankingList = {
-        date: new Date(),
-        worldKey: '',
-        categoryKey: '',
-        characters: [],
-    };
+    const today = new Date();
 
     // 各ユーザーに対して
     for (const user of users) {
         // このユーザーが今日分のデーターをもう取得していたらスキップするよ。
-        // 新規登録したユーザーだとありうるよ。
         const last = user.expData[user.expData.length - 1];
-        if (sameDate(last.date, ranking.date)) {
-            logger.debug(`skip user ${user.userName}. last: ${last.date}, ranking: ${ranking.date}`);
+        if (sameDate(last.date, today)) {
             continue;
         }
 
-        if (!matchTable(ranking, user)) {
-            // ランキングがちがったら取得しなおす
-            try {
-                ranking = await rankingFor(user);
-                await sleep(10000);
-            } catch (err) {
-                logger.error('cannot get ranking data.', err);
-                continue;
-            }
-        }
+        // ランキング取得
+        const ranking = await rankingFor(user);
 
         // ランキングリストからそのユーザーのキャラクターを探す
         const data = ranking.characters.find(data => data.name === user.characterName);
@@ -96,8 +72,4 @@ export default async function scraping(): Promise<void> {
         await User.update(user);
     }
 
-}
-
-async function sleep(time: number): Promise<void> {
-    return new Promise<void>(resolve => setTimeout(resolve, time));
 }
